@@ -25,8 +25,6 @@ public class GameServer extends Thread {
 	int playersCount = 2;
 	boolean iaRunning = false;
 	
-	
-	
 	public GameServer(String ip, int port, IAInterface ia)	{
 
 		try {
