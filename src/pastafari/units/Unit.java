@@ -19,8 +19,16 @@ public abstract class Unit {
 	private int buildCost;
 	private UnitType type;
 	
-	public static Unit unitFrom(String type, Tile tile, Player player) {
-		return null;
+	public static Unit unitFrom(String type, int id, Tile tile, Player player) {
+		if(type == "A") return new Archer(id, tile, player);
+		else if(type == "B") return new Ballista(id, tile, player);
+		else if(type == "N") return new Dwarf(id, tile, player);
+		else if(type == "I") return new Engineer(id, tile, player);
+		else if(type == "C") return new Paladin(id, tile, player);
+		else if(type == "P") return new Peasant(id, tile, player);
+		else if(type == "E") return new Scout(id, tile, player);
+		else if(type == "S") return new Soldier(id, tile, player);
+		else return null;
 	}
 	
 	public Unit(int id, Player player, Tile tile, int strength, int defense, int maxAction, int maxHP, int range, int buildCost, UnitType type) {
