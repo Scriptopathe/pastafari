@@ -1,12 +1,14 @@
 package pastafari;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
 import pastafari.structures.City;
-import pastafari.units.Peasant;
+import pastafari.units.Unit;
+import pastafari.units.UnitType;
 
 public class Grid {
 	private Tile[][] tiles;
@@ -49,16 +51,10 @@ public class Grid {
 	
 	public ArrayList<Tile> getNeighbors(Tile tile, boolean allowRiver) {
 		ArrayList<Tile> neighs = new ArrayList<>();
-		for(int i = -1; i <= 1; i ++) {
-			for(int j = -1; j <= -1; j++) {
-				if(i == 0 && j == 0) continue;
-				
-				int x = tile.getX() + i;
-				int y = tile.getY() + j;
-				
-				if(x < 0 || x >= this.size || y < 0 || y >= this.size) continue;
-				
-				Tile t = this.tiles[x][y];
+		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
+			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
+				if(i == tile.getX() && j == tile.getY()) continue;
+				Tile t = this.tiles[i][j];
 				if((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER) {
 					neighs.add(t);
 				}
@@ -72,17 +68,16 @@ public class Grid {
 	}
 	
 	public double[][] getPeasantMatrice(){
+		int actionPeasant = 2;
 		double peak[][] = new double [this.size][this.size];
-		Peasant lambda = new Peasant(0, null, null);
+		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && lambda.canMove(tiles[i][j]))
+				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, actionPeasant, tiles[i][j]))
 					peak[i][j] = 1;
 				else
 					peak[i][j] = 0;
-				System.out.print(" "+peak[i][j]);
 			}
-			System.out.println();
 		}
 
 		double result[][] = new double [this.size][this.size];
@@ -102,11 +97,10 @@ public class Grid {
 				// Neighbor
 				for (int k = Math.max(p[0]-1, 0); k <= Math.min(p[0]+1, size-1); k++)
 				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++)
-				if(tmp[k][l] == 0 && lambda.canMove(this.tiles[k][l])){
+				if(tmp[k][l] == 0 && canMove(false, actionPeasant, this.tiles[k][l])) {
 					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
 					q.add(new int[]{k, l});
 				}
-				//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 			}
 			
 			for(int k = 0; k < this.size; k++)
@@ -116,4 +110,39 @@ public class Grid {
 		
 		return result;
 	}
+	
+	public void display() {
+		System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
+
+		for(int i = 0; i < this.size; i++) {
+			StringBuilder buffer = new StringBuilder();
+			for(int j = 0; j < this.size; j++) {
+				Tile tile = this.tiles[j][i];
+				
+				if(tile.getOwner().getId() >= 0) buffer.append(" ");
+				
+				buffer.append("|"); buffer.append(tile.getOwner().getId()); buffer.append(";");
+				buffer.append(Building.getBuildingCode(tile.getBuildingType())); buffer.append(";");
+				buffer.append(Unit.getCharCode(tile.getUnitType())); buffer.append(";");
+				buffer.append("(").append(tile.getX()).append(",").append(tile.getY()).append(")").append(";");
+				buffer.append(tile.getType().toString().charAt(0)); buffer.append("|");
+			}
+			System.out.println(buffer.toString());
+			System.out.println(String.join("", Collections.nCopies(this.size * 16, "-")));
+		}
+	}
+	
+
+	public static boolean canMove(boolean isEngineer, int action, Tile to) {
+		if(to.getUnitType() != UnitType.VOID) return false;
+		if(to.getType() == TileType.RIVER && !(isEngineer || to.getBuildingType() == BuildingType.BRIDGE)) return false;
+		
+		int cost = 2;
+		
+		if(to.getType() == TileType.MOUNTAIN) cost += 2;
+		if(to.getBuildingType() == BuildingType.ROAD) cost /= 2;
+		
+		return cost <= action;
+	}
+
 }
