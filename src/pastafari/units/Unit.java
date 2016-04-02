@@ -30,8 +30,13 @@ public abstract class Unit {
 	}
 	
 	public boolean canMove(Tile to) {
+		
 		// TODO
 		return false;
+	}
+	
+	public void moveTo(Tile to) {
+		
 	}
 	
 	public boolean isAlive() {

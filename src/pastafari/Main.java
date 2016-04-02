@@ -7,23 +7,28 @@ public class Main {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		System.out.println("Hello");
-		new GameServer("127.0.0.1", 8080, new IAInterface() {
-			
-			@Override
-			public void makeTurn(GameServer srv) {
-				// TODO Auto-generated method stub
+		for(int i = 0; i < 2; i++)
+		{
+			new GameServer("127.0.0.1", 8080, new IAInterface() {
 				
-			}
-		}).start();
+				@Override
+				public void makeTurn(GameServer srv) {
+					srv.log("MAKE TURN : Type command");
+					String bl = srv.scanIn.nextLine();
+					while(!bl.equals("E"))
+					{
+						srv.sendCommand(bl);
+						
+						srv.log("Type command");
+						bl = srv.scanIn.nextLine();
+					}
+					srv.endTurn();
+					srv.log("END TURN");
+				}
+			}).start();
+		}
 		
-		new GameServer("127.0.0.1", 8080, new IAInterface() {
-			
-			@Override
-			public void makeTurn(GameServer srv) {
-				// TODO Auto-generated method stub
-				
-			}
-		}).start();
+
 	}
 
 }

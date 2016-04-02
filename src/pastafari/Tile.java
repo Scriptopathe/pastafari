@@ -22,7 +22,6 @@ public class Tile {
 		this.x = x;
 		this.y = y;
 		this.type = type;
-		// TODO Auto-generated constructor stub
 	}
 	
 	public int getX() {
@@ -59,5 +58,9 @@ public class Tile {
 	
 	public void setUnit(Unit unit) {
 		this.unit = unit;
+	}
+	
+	public boolean isOwned() {
+		return this.owner == null;
 	}
 }
