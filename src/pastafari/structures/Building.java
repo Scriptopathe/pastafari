@@ -1,17 +1,17 @@
 package pastafari.structures;
 
+import pastafari.Tile;
+
 public abstract class Building {
 	private int buildCost;
 	private int maxHP;
 	private int currentHP;
-	private int x;
-	private int y;
+	private Tile tile;
 	private BuildingType type;
 	
-	public Building(int x, int y, int buildCost, int maxHP, BuildingType type) {
+	public Building(Tile tile, int buildCost, int maxHP, BuildingType type) {
 		this.buildCost = buildCost;
-		this.x = x;
-		this.y = y;
+		this.tile = tile;
 		this.maxHP = maxHP;
 		this.currentHP = this.maxHP;
 		this.type = type;
@@ -21,12 +21,8 @@ public abstract class Building {
 		return this.buildCost;
 	}
 	
-	public int getX() {
-		return x;
-	}
-	
-	public int getY() {
-		return y;
+	public Tile getTile() {
+		return tile;
 	}
 	
 	public int getCurrentHP() {
@@ -45,17 +41,11 @@ public abstract class Building {
 		return this.type;
 	}
 	
-	public static Building buildingFrom(String type, int x, int y) {
-		if(type.equals("f")) {
-			return new Castle(x, y);
-		} else if(type.equals("R")) {
-			return new Road(x, y);
-		} else if(type.equals("P")) {
-			return new Bridge(x, y);
-		} else if(type.equals("H")) {
-			return new Hospital(x, y);
-		} else {
-			return null;
-		}
+	public static Building buildingFrom(String type, Tile tile) {
+		if(type.equals("f")) return new Castle(tile);
+		else if(type.equals("R")) return new Road(tile);
+		else if(type.equals("P")) return new Bridge(tile);
+		else if(type.equals("H")) return new Hospital(tile);
+		else return null;
 	}
 }
