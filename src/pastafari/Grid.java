@@ -1,7 +1,7 @@
 package pastafari;
 
 public class Grid {
-	public Tile[][] tiles;
+	private Tile[][] tiles;
 
 	public Grid(int width, int height) {
 		// TODO Auto-generated constructor stub
@@ -10,6 +10,10 @@ public class Grid {
 	
 	public Tile getTile(int x, int y) {
 		return this.tiles[x][y];
+	}
+	
+	public void setTile(int x, int y, Tile tile) {
+		this.tiles[x][y] = tile;
 	}
 	
 	public void getMovingCost(Tile from, Tile to) {
