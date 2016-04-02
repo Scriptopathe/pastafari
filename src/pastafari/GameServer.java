@@ -98,7 +98,7 @@ public class GameServer extends Thread {
 	}
 	
 	public boolean sendMove(int id, int x, int y){
-		return this.sendCommand("D," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
+		return this.sendCommand("M," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
 	private boolean processResponse(String srvResponse)
