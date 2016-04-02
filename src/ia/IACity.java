@@ -29,7 +29,7 @@ public class IACity implements IAInterface{
 			pMe.setGold(pMe.getGold() - 10);
 			newPlace = pMe.getCity().leftPlace(state.getGrid());
 		}
-		if (pMe.getCity().getTile().isAccessible(false))
+		if (pMe.getCity().getTile().getUnitType() == UnitType.VOID)
 			srv.sendCreate(UnitType.PEASANT);
 	}
 }
