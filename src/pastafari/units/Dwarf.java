@@ -6,7 +6,7 @@ import pastafari.Tile;
 public class Dwarf extends Unit {
 	public static final int STRENGTH = 3;
 	public static final int DEFENSE = 6;
-	public static final int MAX_ACTION = 4;
+	public static final int MAX_ACTION = 2;
 	public static final int MAX_HP = 4;
 	public static final int RANGE = 1;
 	public static final int COST = 100;

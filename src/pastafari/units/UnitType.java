@@ -8,5 +8,6 @@ public enum UnitType {
 	PALADIN,
 	PEASANT,
 	SCOUT,
-	SOLDIER
+	SOLDIER,
+	VOID
 }
