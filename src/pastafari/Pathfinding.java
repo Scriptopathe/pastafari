@@ -40,7 +40,7 @@ public class Pathfinding
 	
 	public int getHeuristicCost(Tile src, Tile dst)
 	{
-		return Grid.getDistance(src, dst) * 4;
+		return Grid.getDistance(src, dst) * 1;
 	}
 	
 	public int getCost(Tile t)
@@ -75,49 +75,27 @@ public class Pathfinding
 		Label f = new Label(from);
 		f.heuristicCost = getHeuristicCost(from, to);
 		openset.add(f);
-		while(!openset.isEmpty())
-		{
-			Label next = openset.poll();
-			closedSet.put(next.tile, next.getTotalCost());
-
-			if(next.tile == to)
-			{
-				break;
-			}
+		
+		closedSet.put(from, 0);
+		cameFrom.put(from, null);
+		while(!openset.isEmpty()) {
+			Label currentTile = openset.poll();
 			
-			List<Tile> neighboors = srv.getGameState().getGrid().getNeighbors(next.tile, allowRiver);
-			for(Tile neighboor : neighboors)
-			{
-				if(neighboor == next.tile)
-				{ 
-					System.out.println("nononono");
-				}
-				int cost = next.pathCost + getCost(neighboor);
-				int heuristicCost = getHeuristicCost(next.tile, neighboor);
-				int totalCost = cost + heuristicCost;
-				if(closedSet.containsKey(neighboor))
-				{
-					int oldCost = closedSet.get(neighboor);
-					// Mise à jour si besoin
-					if(totalCost < oldCost)
-					{
-						closedSet.put(neighboor, totalCost);
-						Label label = new Label(neighboor);
-						label.heuristicCost = heuristicCost;
-						label.pathCost = cost;
-						cameFrom.put(label.tile, next.tile);
-					}
-				}
-				else
-				{
-					Label label = new Label(neighboor);
-					label.heuristicCost = heuristicCost;
-					label.pathCost = cost;
+			if(currentTile.equals(to)) break;
+			
+			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
+				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
+					closedSet.put(neigh, newCost);
+					Label label = new Label(neigh);
+					label.heuristicCost = getHeuristicCost(to, neigh);
+					label.pathCost = newCost;
 					openset.add(label);
-					cameFrom.put(label.tile, next.tile);
+					cameFrom.put(neigh, currentTile.tile);
 				}
 			}
 		}
+		
 		
 		List<Tile> tiles = new ArrayList<>();
 		Tile current = to;
