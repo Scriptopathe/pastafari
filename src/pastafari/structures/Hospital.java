@@ -5,6 +5,6 @@ public class Hospital extends Building {
 	public static final int MAX_HP = 2;
 	
 	public Hospital(int x, int y) {
-		super(x, y, BUILD_COST, MAX_HP);
+		super(x, y, BUILD_COST, MAX_HP, BuildingType.HOSPITAL);
 	}
 }

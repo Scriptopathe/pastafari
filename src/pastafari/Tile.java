@@ -4,21 +4,15 @@ import pastafari.structures.Building;
 import pastafari.units.Unit;
 
 public class Tile {
-	public static enum Type {
-		FOREST,
-		LOWLAND,
-		MOUNTAIN,
-		RIVER
-	}
-	
+
 	private int x;
 	private int y;
-	private Type type;
+	private TileType type;
 	private Player owner;
 	private Unit unit;
 	private Building building;
 	
-	public Tile(int x, int y, Type type) {
+	public Tile(int x, int y, TileType type) {
 		this.x = x;
 		this.y = y;
 		this.type = type;
@@ -44,7 +38,7 @@ public class Tile {
 		return unit;
 	}
 	
-	public Type getType() {
+	public TileType getType() {
 		return type;
 	}
 	

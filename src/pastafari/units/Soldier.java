@@ -11,7 +11,7 @@ public class Soldier extends Unit {
 	public static final int RANGE = 1;
 	public static final int COST = 60;
 	
-	public Soldier(Tile tile, Player player) {
-		super(player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST);
+	public Soldier(int id, Tile tile, Player player) {
+		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.SOLDIER);
 	}
 }

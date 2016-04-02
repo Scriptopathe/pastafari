@@ -1,18 +1,20 @@
 package pastafari.structures;
 
 public abstract class Building {
-	protected int buildCost;
-	protected int maxHP;
-	protected int currentHP;
-	protected int x;
-	protected int y;
+	private int buildCost;
+	private int maxHP;
+	private int currentHP;
+	private int x;
+	private int y;
+	private BuildingType type;
 	
-	public Building(int x, int y, int buildCost, int maxHP) {
+	public Building(int x, int y, int buildCost, int maxHP, BuildingType type) {
 		this.buildCost = buildCost;
 		this.x = x;
 		this.y = y;
 		this.maxHP = maxHP;
 		this.currentHP = this.maxHP;
+		this.type = type;
 	}
 	
 	public int getBuildCost() {
@@ -37,5 +39,23 @@ public abstract class Building {
 	
 	public void setCurrentHP(int currentHP) {
 		this.currentHP = currentHP;
+	}
+	
+	public BuildingType getType() {
+		return this.type;
+	}
+	
+	public static Building buildingFrom(String type, int x, int y) {
+		if(type.equals("f")) {
+			return new Castle(x, y);
+		} else if(type.equals("R")) {
+			return new Road(x, y);
+		} else if(type.equals("P")) {
+			return new Bridge(x, y);
+		} else if(type.equals("H")) {
+			return new Hospital(x, y);
+		} else {
+			return null;
+		}
 	}
 }
