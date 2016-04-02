@@ -23,6 +23,7 @@ public class GameServer extends Thread {
 	int myId;
 	int currentPlayer;
 	int playersCount = 2;
+	boolean iaRunning = false;
 	
 	
 	
@@ -151,31 +152,27 @@ public class GameServer extends Thread {
 		// Le joueur 0 commence.
 		if(myId == 0)
 		{
-			ia.makeTurn(this);
+			makeTurn();
 		}
-		
 		
 		while(true)
 		{
 			String input = this.receive();
-			if(input.contains(":ok:") || input.contains(":ko:"))
-			{
-				this.updateState(input);
-			}
-			// Changement de tour
-			if(input.contains("player") && input.contains("turn"))
-			{
-				int finished = Integer.parseInt(input.replace("player", "").replace("turn", "").trim());
-				currentPlayer = (finished + 1) % playersCount;
-				// Si c'est � notre tour, on lance l'IA.
-				if(currentPlayer == myId)
-				{
-					ia.makeTurn(this);
-				}
-			}
+			this.updateState(input);
 		}
 	}
 	
+	private void makeTurn()
+	{
+		if(this.iaRunning)
+		{
+			log("IA already running...");
+			return;
+		}
+		this.iaRunning = true;
+		this.ia.makeTurn(this);
+		this.iaRunning = false;
+	}
 	private void updateState(String gridStr)
 	{
 		int mapX = 0;
@@ -185,12 +182,11 @@ public class GameServer extends Thread {
 		int len = gridStr.split("u")[0].replaceAll("[^\\[]", "").length();
 		int size = (int)Math.sqrt(len);
 		int players = 2;
-		System.out.println("Size = " + size);
 		
 		// Preprocess
 		gridStr = gridStr.replace("];];]:u", "];];]@u");
 		gridStr = gridStr.replace("];];", "];]$");
-		System.out.println(gridStr);
+		// System.out.println(gridStr);
 		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
 		// Cr�ation du nouveau state
@@ -210,7 +206,7 @@ public class GameServer extends Thread {
 		{
 			String line = lines[i];
 			String[] cases = line.split(";");
-			System.out.println("line: " + line);
+			// System.out.println("line: " + line);
 			for(int j = 0; j < cases.length - 1; j++)
 			{
 				String tile = cases[j];
@@ -276,6 +272,23 @@ public class GameServer extends Thread {
 		}
 		
 		this.state = state;
+		
+		// Next player
+		if(!gridStr.startsWith("m"))
+		{
+			int nextPlayer = Integer.parseInt(""+gridStr.charAt(0));
+			currentPlayer = nextPlayer;
+			log("nextPlayer " + nextPlayer + ", currentPlayer = " + currentPlayer);
+			if(!iaRunning)
+			{
+				currentPlayer = nextPlayer;
+				makeTurn();
+			}
+			else
+			{
+				log("datadada");
+			}
+		}
 	}
 	
 	
