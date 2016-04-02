@@ -124,4 +124,8 @@ public abstract class Unit {
 	public void setCurrentAction(int currentAction) {
 		this.currentAction = currentAction;
 	}
+	
+	public void setID(int id) {
+		this.id = id;
+	}
 }
