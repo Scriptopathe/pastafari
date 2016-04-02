@@ -2,6 +2,10 @@ package pastafari;
 
 import java.util.LinkedList;
 
+import pastafari.structures.Building;
+import pastafari.structures.BuildingType;
+import pastafari.structures.City;
+
 public class Grid {
 	private Tile[][] tiles;
 	private int size;
@@ -17,6 +21,22 @@ public class Grid {
 		return this.tiles[x][y];
 	}
 	
+	public City getCity()
+	{
+		for(int x = 0; x < size; x++)
+		{
+			for(int y = 0; y < size; y++)
+			{
+				Building b = tiles[x][y].getBuilding();
+				if(b != null && b.getType() == BuildingType.CITY)
+					return (City)b;
+					
+			}
+		}
+		System.out.println("Grid.getCity(): no city found !!");
+		return null;
+	}
+	
 	public int getSize() {
 		return size;
 	}
@@ -29,8 +49,8 @@ public class Grid {
 		return;
 	}
 	
-	public static double getDistance(Tile from, Tile to) {
-		return Math.sqrt(Math.pow((from.getX() - to.getX()), 2) + Math.pow(from.getY()- to.getY(), 2));
+	public static int getDistance(Tile from, Tile to) {
+		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));
 	}
 	
 	public double[][] getPeasantMatrice(){
@@ -58,7 +78,7 @@ public class Grid {
 					for (int k = -1; k < 2; k++){
 						for (int l = -1; l < 2; l++){
 							if (p[0] + k >= 0 && p[0] + k < this.size && p[1] + l >= 0 && p[1] + l < this.size){
-								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].isAccessible()){
+								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].isAccessible(false)){
 									tmp[p[0] + k][p[1] + l] = tmp[i][j] * 0.7;
 									q.add(new int[]{p[0] + k, p[1] + l});
 								}

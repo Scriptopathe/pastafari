@@ -2,6 +2,7 @@ package pastafari;
 
 import java.util.ArrayList;
 
+import pastafari.structures.City;
 import pastafari.units.Unit;
 
 public class Player {
@@ -11,6 +12,7 @@ public class Player {
 	private boolean isMe;
 	
 	private ArrayList<Unit> units;
+	private City city;
 	
 	public Player(int id, boolean isMe) {
 		this.id = id;
@@ -51,5 +53,13 @@ public class Player {
 	
 	public ArrayList<Unit> getUnits(){
 		return this.units;
+	}
+	
+	public void setCity(City c) {
+		city = c;
+	}
+	
+	public City getCity() {
+		return city;
 	}
 }
