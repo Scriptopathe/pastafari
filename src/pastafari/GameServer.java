@@ -215,13 +215,13 @@ public class GameServer extends Thread {
 				String[] values = tile.split(",");
 				
 				TileType type;
-				if(values[0].equals("F"))
+				if(values[0].equals("f"))
 					type = TileType.FOREST;
-				else if(values[0].equals("M"))
+				else if(values[0].equals("m"))
 					type = TileType.MOUNTAIN;
-				else if(values[0].equals("R"))
+				else if(values[0].equals("r"))
 					type = TileType.RIVER;
-				else if(values[0].equals("P"))
+				else if(values[0].equals("p"))
 					type = TileType.LOWLAND;
 				else
 					type = TileType.LOWLAND;
@@ -263,6 +263,7 @@ public class GameServer extends Thread {
 				grid.getTile(x, y).getUnit().setID(id);
 				grid.getTile(x, y).getUnit().setCurrentHP(life);
 				grid.getTile(x, y).getUnit().setCurrentAction(actions);
+				state.getPlayer(playerId).addUnit(grid.getTile(x, y).getUnit());
 			}
 			
 			String goldStr = units[units.length-1].replace(";", "").replace(":", "").replace("$", "");
