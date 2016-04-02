@@ -1,10 +1,13 @@
 package pastafari;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
 import pastafari.structures.City;
+import pastafari.units.Peasant;
 
 public class Grid {
 	private Tile[][] tiles;
@@ -12,7 +15,6 @@ public class Grid {
 
 
 	public Grid(int size) {
-		// TODO Auto-generated constructor stub
 		this.tiles = new Tile[size][size];
 		this.size = size;
 	}
@@ -44,58 +46,55 @@ public class Grid {
 	public void setTile(int x, int y, Tile tile) {
 		this.tiles[x][y] = tile;
 	}
-	
-	public void getMovingCost(Tile from, Tile to) {
-		return;
-	}
+
 	
 	public static int getDistance(Tile from, Tile to) {
 		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));
 	}
 	
 	public double[][] getPeasantMatrice(){
-		double result[][] = new double [this.size][this.size];
-		
+		double peak[][] = new double [this.size][this.size];
+		Peasant lambda = new Peasant(0, null, null);
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && !(this.tiles[i][j].getType() == TileType.RIVER))
-					result[i][j] = 1;
+				if (!this.tiles[i][j].getOwner().isMe() && lambda.canMove(tiles[i][j]))
+					peak[i][j] = 1;
 				else
-					result[i][j] = 0;
+					peak[i][j] = 0;
+				System.out.print(" "+peak[i][j]);
 			}
+			System.out.println();
 		}
 
-		double coeffs[][] = new double [this.size][this.size];
+		double result[][] = new double [this.size][this.size];
+		LinkedList<int[]> q = new LinkedList<>();
 		
-		for (int i = 0; i < this.size; i++){
-			for (int j = 0; j < this.size; j++)
-			if(result[i][j] > 0) {
-				LinkedList<int[]> q = new LinkedList<>();
-				double tmp[][] = new double [this.size][this.size];
-				tmp[i][j] = result[i][j];
-				q.add(new int[]{i, j});
-				while (!q.isEmpty()){
-					int p[] = q.pop();
-					for (int k = -1; k < 2; k++){
-						for (int l = -1; l < 2; l++){
-							if (p[0] + k >= 0 && p[0] + k < this.size && p[1] + l >= 0 && p[1] + l < this.size){
-								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].isAccessible(false)){
-									tmp[p[0] + k][p[1] + l] = tmp[i][j] * 0.7;
-									q.add(new int[]{p[0] + k, p[1] + l});
-								}
-							}
-						}
-					}
-					//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
+		for (int i = 0; i < this.size; i++)
+		for (int j = 0; j < this.size; j++)
+		if(peak[i][j] > 0) {
+			q.clear();
+			double tmp[][] = new double [this.size][this.size];
+			tmp[i][j] = peak[i][j];
+			q.add(new int[]{i, j});
+			
+			while(!q.isEmpty()) {
+				int p[] = q.pop();
+				
+				// Neighbor
+				for (int k = Math.max(p[0]-1, 0); k <= Math.min(p[0]+1, size-1); k++)
+				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++)
+				if(tmp[k][l] == 0 && lambda.canMove(this.tiles[k][l])){
+					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
+					q.add(new int[]{k, l});
 				}
-				for (int k = 0; k < this.size; k++){
-					for (int l = 0; l < this.size; l++){
-						coeffs[k][l] += tmp[k][l];
-					}
-				}
+				//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 			}
+			
+			for(int k = 0; k < this.size; k++)
+			for(int l = 0; l < this.size; l++)
+				result[k][l] += tmp[k][l];
 		}
 		
-		return coeffs;
+		return result;
 	}
 }
