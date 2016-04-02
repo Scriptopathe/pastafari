@@ -7,7 +7,7 @@ public class GameState {
 	private Grid grid;
 	private int size;
 	private int myId;
-	
+
 	public GameState(int size, int myId) {
 		this.players = new HashMap<>();
 		this.grid = new Grid(size);
@@ -32,5 +32,9 @@ public class GameState {
 	
 	public Player getMyPlayer() {
 		return this.players.get(this.myId);
+	}
+	
+	public int getMyId() {
+		return myId;
 	}
 }
