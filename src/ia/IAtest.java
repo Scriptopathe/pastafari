@@ -25,7 +25,6 @@ public class IAtest implements IAInterface {
 		// buy&move units
 		IACity city = new IACity();
 		city.makeTurn(srv);
-		
 		srv.endTurn();
 	}
 	
@@ -50,7 +49,8 @@ public class IAtest implements IAInterface {
 		while(!sorted.isEmpty()) {
 			SortedPeasantMove spm = sorted.poll();
 			if(done.add(spm.p) && game.getGrid().getTile(spm.dx, spm.dy).isAccessible(false)) {
-				srv.sendCommand("D,"+spm.p.getId()+","+spm.dx+","+spm.dy);
+				//srv.sendCommand("D,"+spm.p.getId()+","+spm.dx+","+spm.dy);
+				srv.sendMove(spm.p.getId(), spm.dx, spm.dy);
 			}
 		}
 	}
