@@ -15,7 +15,11 @@ public class GameState {
 		return grid;
 	}
 	
-	public HashMap<Integer, Player> getPlayers() {
-		return players;
+	public void addPlayer(Player player) {
+		this.players.put(player.getId(), player);
+	}
+	
+	public Player getPlayer(int id) {
+		return this.players.get(id);
 	}
 }
