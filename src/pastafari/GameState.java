@@ -8,11 +8,9 @@ public class GameState {
 	private int size;
 	private int id;
 	
-	public GameState(int size, int myID) {
+	public GameState(int size) {
 		this.players = new HashMap<>();
-		this.grid = new Grid(size, size);
-		this.size = size;
-		this.id = myID;
+		this.grid = new Grid(size);
 	}
 	
 	public Grid getGrid() {

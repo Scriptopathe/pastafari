@@ -57,4 +57,9 @@ public class Tile {
 	public boolean isOwned() {
 		return this.owner == null;
 	}
+	
+	public boolean isAccessible(){
+		// ajouter le type bridge
+		return this.unit == null && (this.getType() != TileType.RIVER);
+	}
 }

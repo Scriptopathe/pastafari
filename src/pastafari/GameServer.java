@@ -51,7 +51,7 @@ public class GameServer extends Thread {
 	
 	/**
 	 * Envoie une commande au serveur.
-	 * Retourne le résulat de la commande, et met à jour le GameState.
+	 * Retourne le rï¿½sulat de la commande, et met ï¿½ jour le GameState.
 	 * @param command
 	 * @return
 	 */
@@ -71,6 +71,7 @@ public class GameServer extends Thread {
 	
 	private boolean processResponse(String srvResponse)
 	{
+		parseGrid(srvResponse);
 		return srvResponse.contains("OK");
 	}
 	
@@ -93,7 +94,7 @@ public class GameServer extends Thread {
 	}
 	
 	/**
-	 * Envoie un message de log à la console.
+	 * Envoie un message de log ï¿½ la console.
 	 * @param str
 	 */
 	public void log(String str)
@@ -103,7 +104,7 @@ public class GameServer extends Thread {
 	
 	public void run()
 	{
-		// Démarrage
+		// Dï¿½marrage
 		this.myId = Integer.parseInt(this.receive().replace("player", ""));
 		this.send("OK");
 		
@@ -121,12 +122,78 @@ public class GameServer extends Thread {
 			{
 				int finished = Integer.parseInt(input.replace("player", "").replace("turn", "").trim());
 				currentPlayer = (finished + 1) % playersCount;
-				// Si c'est à notre tour, on lance l'IA.
+				// Si c'est ï¿½ notre tour, on lance l'IA.
 				if(currentPlayer == myId)
 				{
 					ia.makeTurn(this);
 				}
 			}
 		}
+	}
+	
+	private void parseGrid(String gridStr)
+	{
+		
+		boolean parsingMap = false;
+		boolean parsingUnits = false;
+		int mapX = 0;
+		int mapY = 0;
+		int dataId = 0;
+		int depth = -1;
+		
+		// Taille de la map
+		int len = gridStr.split("U")[0].replaceAll("[^\\[]", "").length();
+		int size = (int)Math.sqrt(len);
+		System.out.println("Size = " + size);
+		
+		// Preprocess
+		gridStr = gridStr.replace("];];];u", "];];]@u");
+		gridStr = gridStr.replace("];];", "];]$");
+		gridStr = gridStr.replace("];", "],");
+		String map = gridStr.split("@")[0].split("m\\[")[1];
+		
+		// Grille
+		Grid grid = new Grid(size);
+		
+		System.out.println(map);
+		String[] lines = map.split("\\$");
+		for(int i = 0; i < lines.length - 1; i++)
+		{
+			String line = lines[i];
+			String[] cases = line.split(",");
+			System.out.println("line: " + line);
+			for(int j = 0; j < cases.length - 1; j++)
+			{
+				String tile = cases[j];
+				tile = tile.replace("[", "");
+				tile = tile.replace("]", "");
+				String[] values = tile.split(";");
+				
+				TileType type;
+				if(values[0].equals("F"))
+					type = TileType.FOREST;
+				else if(values[0].equals("M"))
+					type = TileType.MOUNTAIN;
+				else if(values[0].equals("R"))
+					type = TileType.RIVER;
+				else if(values[0].equals("P"))
+					type = TileType.LOWLAND;
+				else
+					type = TileType.LOWLAND;
+				
+				Tile newTile = new Tile(mapX, mapY, type);
+				grid.setTile(mapX, mapY, newTile);
+				for(String value : values)
+				{
+					System.out.println("value: (" + mapX + ", " + mapY + ")" + value);
+				}
+				mapX += 1;
+			}
+			mapY += 1;
+			mapX = 0;
+		}
+		System.out.println(map);
+		
+
 	}
 }
