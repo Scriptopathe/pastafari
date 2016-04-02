@@ -114,6 +114,9 @@ public class GameServer extends Thread {
 			ia.makeTurn(this);
 		}
 		
+		// Premier tour : la map
+		this.parseGrid(this.receive());
+		
 		while(true)
 		{
 			String input = this.receive();
@@ -131,7 +134,7 @@ public class GameServer extends Thread {
 		}
 	}
 	
-	private void parseGrid(String gridStr)
+	private Grid parseGrid(String gridStr)
 	{
 		
 		boolean parsingMap = false;
@@ -147,10 +150,10 @@ public class GameServer extends Thread {
 		System.out.println("Size = " + size);
 		
 		// Preprocess
-		gridStr = gridStr.replace("];];];u", "];];]@u");
+		gridStr = gridStr.replace("];];]:u", "];];]@u");
 		gridStr = gridStr.replace("];];", "];]$");
-		gridStr = gridStr.replace("];", "],");
-		String map = gridStr.split("@")[0].split("m\\[")[1];
+		System.out.println(gridStr);
+		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
 		// Grille
 		Grid grid = new Grid(size);
@@ -160,14 +163,14 @@ public class GameServer extends Thread {
 		for(int i = 0; i < lines.length - 1; i++)
 		{
 			String line = lines[i];
-			String[] cases = line.split(",");
+			String[] cases = line.split(";");
 			System.out.println("line: " + line);
 			for(int j = 0; j < cases.length - 1; j++)
 			{
 				String tile = cases[j];
 				tile = tile.replace("[", "");
 				tile = tile.replace("]", "");
-				String[] values = tile.split(";");
+				String[] values = tile.split(",");
 				
 				TileType type;
 				if(values[0].equals("F"))
@@ -182,7 +185,12 @@ public class GameServer extends Thread {
 					type = TileType.LOWLAND;
 				
 				Tile newTile = new Tile(mapX, mapY, type);
+				// Setup du tile
+				
+				
 				grid.setTile(mapX, mapY, newTile);
+				
+				
 				for(String value : values)
 				{
 					System.out.println("value: (" + mapX + ", " + mapY + ")" + value);
@@ -192,8 +200,37 @@ public class GameServer extends Thread {
 			mapY += 1;
 			mapX = 0;
 		}
-		System.out.println(map);
 		
-
+		
+		System.out.println("kokoko: " + gridStr.split("@u")[1]);
+		String[] playerUnits = gridStr.split("@u")[1].split(":p[0-9]:");
+		
+		for(int player = 1; player < playerUnits.length; player++)
+		{
+			playerUnits[player] = playerUnits[player].replace("[", "").replace("]", "");
+			String[] units = playerUnits[player].split(";");
+			System.out.println("player: " + playerUnits[player]);
+			for(int unitId = 0; unitId < units.length - 1; unitId++)
+			{
+				String unit = units[unitId];
+				String[] values = unit.split(",");
+				if(values.length < 5)
+					continue;
+				System.out.println("prout: " + unit);
+				int id = Integer.parseInt(values[0]);
+				int actions = Integer.parseInt(values[1]);
+				int life = Integer.parseInt(values[2]);
+				int x = Integer.parseInt(values[3]);
+				int y = Integer.parseInt(values[4]);
+				
+				// grid.getTile(x, y).getUnit().setHP(life);
+				// grid.getTile(x, y).getUnit().setAction(action);
+			}
+			
+			String goldStr = units[units.length-1].replace(";", "").replace(":", "").replace("$", "");
+			System.out.println("gold: " + goldStr);
+		}
+		
+		return grid;
 	}
 }
