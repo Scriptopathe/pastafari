@@ -57,7 +57,7 @@ public class IAtest implements IAInterface {
 		HashSet<Integer> done = new HashSet<>();
 		while(!sorted.isEmpty()) {
 			SortedPeasantMove spm = sorted.poll();
-			if(done.add(spm.p.getId()) && spm.p.canMove(game.getGrid().getTile(spm.dx, spm.dy))) {
+			if(done.add(spm.p.getId()) && Grid.canMove(false, spm.p.getCurrentAction(), game.getGrid().getTile(spm.dx, spm.dy))) {
 				srv.sendCommand("D,"+spm.p.getId()+","+spm.dx+","+spm.dy);
 			}
 		}

@@ -37,7 +37,7 @@ public abstract class Unit {
 	}
 	
 	public int getMoveCost(Tile to) {
-		if(Grid.getDistance(this.tile, to) >= 1) return Integer.MAX_VALUE;
+		if(Grid.getDistance(this.tile, to) > 1) return Integer.MAX_VALUE;
 		if(to.getUnitType() != UnitType.VOID) return Integer.MAX_VALUE;
 		if(to.getType() == TileType.RIVER && !(this.type == UnitType.ENGINEER || to.getBuildingType() == BuildingType.BRIDGE)) return Integer.MAX_VALUE;
 		
