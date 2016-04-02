@@ -28,8 +28,4 @@ public class GameState {
 	public int getSize() {
 		return size;
 	}
-	
-	public boolean isMe(Player player) {
-		return player.getId() == this.id;
-	}
 }

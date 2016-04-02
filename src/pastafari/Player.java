@@ -4,11 +4,13 @@ public class Player {
 	private int id;
 	private int gold;
 	private boolean alive;
+	private boolean isMe;
 	
-	public Player(int id) {
+	public Player(int id, boolean isMe) {
 		this.id = id;
 		this.gold = 100;
 		this.alive = true;
+		this.isMe = isMe;
 	}
 	
 	public void setAlive(boolean alive) {
@@ -29,5 +31,9 @@ public class Player {
 	
 	public boolean isAlive() {
 		return alive;
+	}
+	
+	public boolean isMe() {
+		return isMe;
 	}
 }
