@@ -24,9 +24,7 @@ public abstract class Unit {
 	}
 	
 	public Unit(int id, Player player, Tile tile, int strength, int defense, int maxAction, int maxHP, int range, int buildCost, UnitType type) {
-		this.player = player;
-		this.player.addUnit(this);
-		
+		this.player = player;		
 		this.strength = strength;
 		this.defense = defense;
 		this.maxAction = maxAction;
