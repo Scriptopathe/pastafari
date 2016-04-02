@@ -1,5 +1,7 @@
 package pastafari;
 
+import java.util.LinkedList;
+
 public class Grid {
 	private Tile[][] tiles;
 	private int size;
@@ -36,7 +38,33 @@ public class Grid {
 		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				
+				if (this.tiles[i][j].getOwner() == 0 /* c'est moi */ && !(this.tiles[i][j].getType() == Tile.Type.RIVER))
+					result[i][j] = 1;
+				else
+					result[i][j] = 0;
+			}
+		}
+
+		double result[][] = new double [this.size][this.size];
+		
+		for (int i = 0; i < this.size; i++){
+			for (int j = 0; j < this.size; j++){
+				LinkedList<int[]> q = new LinkedList<>();
+				double tmp[][] = new double [this.size][this.size];
+				while (!q.isEmpty()){
+					int p[] = q.pop();
+					for (int k = -1; k < 2; k++){
+						for (int l = -1; l < 2; l++){
+							if (p[0] + k >= 0 && p[0] + k < this.size && p[1] + l >= 0 && p[1] + l < this.size){
+								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].getType() != Tile.Type.RIVER){
+									
+								}
+							}
+						}
+					}
+					tmp[p[0]][p[1]] = 
+				}
+				result[i][j] = 0;
 			}
 		}
 		
