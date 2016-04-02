@@ -71,6 +71,7 @@ public class GameServer extends Thread {
 	
 	private boolean processResponse(String srvResponse)
 	{
+		parseGrid(srvResponse);
 		return srvResponse.contains("OK");
 	}
 	
@@ -128,5 +129,71 @@ public class GameServer extends Thread {
 				}
 			}
 		}
+	}
+	
+	private void parseGrid(String gridStr)
+	{
+		
+		boolean parsingMap = false;
+		boolean parsingUnits = false;
+		int mapX = 0;
+		int mapY = 0;
+		int dataId = 0;
+		int depth = -1;
+		
+		// Taille de la map
+		int len = gridStr.split("U")[0].replaceAll("[^\\[]", "").length();
+		int size = (int)Math.sqrt(len);
+		System.out.println("Size = " + size);
+		
+		// Preprocess
+		gridStr = gridStr.replace("];];];u", "];];]@u");
+		gridStr = gridStr.replace("];];", "];]$");
+		gridStr = gridStr.replace("];", "],");
+		String map = gridStr.split("@")[0].split("m\\[")[1];
+		
+		// Grille
+		Grid grid = new Grid(size, size);
+		
+		System.out.println(map);
+		String[] lines = map.split("\\$");
+		for(int i = 0; i < lines.length - 1; i++)
+		{
+			String line = lines[i];
+			String[] cases = line.split(",");
+			System.out.println("line: " + line);
+			for(int j = 0; j < cases.length - 1; j++)
+			{
+				String tile = cases[j];
+				tile = tile.replace("[", "");
+				tile = tile.replace("]", "");
+				String[] values = tile.split(";");
+				
+				Tile.Type type;
+				if(values[0].equals("F"))
+					type = Tile.Type.FOREST;
+				else if(values[0].equals("M"))
+					type = Tile.Type.MOUNTAIN;
+				else if(values[0].equals("R"))
+					type = Tile.Type.RIVER;
+				else if(values[0].equals("P"))
+					type = Tile.Type.LOWLAND;
+				else
+					type = Tile.Type.LOWLAND;
+				
+				Tile newTile = new Tile(mapX, mapY, type);
+				grid.setTile(mapX, mapY, newTile);
+				for(String value : values)
+				{
+					System.out.println("value: (" + mapX + ", " + mapY + ")" + value);
+				}
+				mapX += 1;
+			}
+			mapY += 1;
+			mapX = 0;
+		}
+		System.out.println(map);
+		
+
 	}
 }
