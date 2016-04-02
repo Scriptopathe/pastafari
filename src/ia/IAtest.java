@@ -19,6 +19,7 @@ public class IAtest implements IAInterface {
 	public void makeTurn(GameServer srv) {
 		this.srv = srv;
 		game = srv.getGameState();
+		game.getGrid().display();
 		moveExplore(game);
 		//srv.sendCommand(""); 
 		// move to attack

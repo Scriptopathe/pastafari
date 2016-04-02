@@ -1,11 +1,13 @@
 package pastafari;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
 import pastafari.structures.City;
+import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
 public class Grid {
@@ -51,6 +53,7 @@ public class Grid {
 		ArrayList<Tile> neighs = new ArrayList<>();
 		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
 			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
+				if(i == tile.getX() && j == tile.getY()) continue;
 				Tile t = this.tiles[i][j];
 				if((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER) {
 					neighs.add(t);
@@ -111,6 +114,27 @@ public class Grid {
 		return result;
 	}
 	
+	public void display() {
+		System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
+
+		for(int i = 0; i < this.size; i++) {
+			StringBuilder buffer = new StringBuilder();
+			for(int j = 0; j < this.size; j++) {
+				Tile tile = this.tiles[j][i];
+				
+				if(tile.getOwner().getId() >= 0) buffer.append(" ");
+				
+				buffer.append("|"); buffer.append(tile.getOwner().getId()); buffer.append(";");
+				buffer.append(Building.getBuildingCode(tile.getBuildingType())); buffer.append(";");
+				buffer.append(Unit.getCharCode(tile.getUnitType())); buffer.append(";");
+				buffer.append("(").append(tile.getX()).append(",").append(tile.getY()).append(")").append(";");
+				buffer.append(tile.getType().toString().charAt(0)); buffer.append("|");
+			}
+			System.out.println(buffer.toString());
+			System.out.println(String.join("", Collections.nCopies(this.size * 16, "-")));
+		}
+	}
+	
 
 	public static boolean canMove(boolean isEngineer, int action, Tile to) {
 		if(to.getUnitType() != UnitType.VOID) return false;
@@ -123,4 +147,5 @@ public class Grid {
 		
 		return cost <= action;
 	}
+
 }
