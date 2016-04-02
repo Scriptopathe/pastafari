@@ -5,6 +5,8 @@ import pastafari.Player;
 import pastafari.Tile;
 
 public abstract class Unit {
+	
+	private int id;
 	private int strength;
 	private int defense;
 	private int currentAction;
@@ -15,9 +17,14 @@ public abstract class Unit {
 	private int range;
 	private Tile tile;
 	private int buildCost;
+	private UnitType type;
 	
-	public Unit(Player player, Tile tile, int strength, int defense, int maxAction, int maxHP, int range, int buildCost) {
-		this.player = player;
+	public static Unit unitFrom(String type, Tile tile, Player player) {
+		return null;
+	}
+	
+	public Unit(int id, Player player, Tile tile, int strength, int defense, int maxAction, int maxHP, int range, int buildCost, UnitType type) {
+		this.player = player;		
 		this.strength = strength;
 		this.defense = defense;
 		this.maxAction = maxAction;
@@ -27,9 +34,8 @@ public abstract class Unit {
 		this.range = range;
 		this.tile = tile;
 		this.buildCost = buildCost;
-		
-		// add this unit to the list of unit of the player
-		//this.player
+		this.id = id;
+		this.type = type;
 	}
 	
 	public boolean canMove(Tile to) {
@@ -42,6 +48,7 @@ public abstract class Unit {
 		
 	}
 	
+	
 	public boolean isAlive() {
 		return this.currentHP > 0;
 	}
@@ -52,6 +59,10 @@ public abstract class Unit {
 	
 	public boolean inRange(Unit unit) {
 		return Grid.getDistance(this.getTile(), unit.getTile()) <= range;
+	}
+	
+	public UnitType getType() {
+		return type;
 	}
 	
 	public Tile getTile() {
@@ -88,5 +99,21 @@ public abstract class Unit {
 	
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public int getBuildCost() {
+		return buildCost;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setCurrentHP(int currentHP) {
+		this.currentHP = currentHP;
+	}
+	
+	public void setCurrentAction(int currentAction) {
+		this.currentAction = currentAction;
 	}
 }

@@ -38,7 +38,7 @@ public class Grid {
 		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && !(this.tiles[i][j].getType() == Tile.Type.RIVER))
+				if (!this.tiles[i][j].getOwner().isMe() && !(this.tiles[i][j].getType() == TileType.RIVER))
 					result[i][j] = 1;
 				else
 					result[i][j] = 0;

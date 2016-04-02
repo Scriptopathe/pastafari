@@ -51,7 +51,7 @@ public class GameServer extends Thread {
 	
 	/**
 	 * Envoie une commande au serveur.
-	 * Retourne le résulat de la commande, et met à jour le GameState.
+	 * Retourne le rï¿½sulat de la commande, et met ï¿½ jour le GameState.
 	 * @param command
 	 * @return
 	 */
@@ -94,7 +94,7 @@ public class GameServer extends Thread {
 	}
 	
 	/**
-	 * Envoie un message de log à la console.
+	 * Envoie un message de log ï¿½ la console.
 	 * @param str
 	 */
 	public void log(String str)
@@ -104,7 +104,7 @@ public class GameServer extends Thread {
 	
 	public void run()
 	{
-		// Démarrage
+		// Dï¿½marrage
 		this.myId = Integer.parseInt(this.receive().replace("player", ""));
 		this.send("OK");
 		
@@ -122,7 +122,7 @@ public class GameServer extends Thread {
 			{
 				int finished = Integer.parseInt(input.replace("player", "").replace("turn", "").trim());
 				currentPlayer = (finished + 1) % playersCount;
-				// Si c'est à notre tour, on lance l'IA.
+				// Si c'est ï¿½ notre tour, on lance l'IA.
 				if(currentPlayer == myId)
 				{
 					ia.makeTurn(this);
@@ -153,7 +153,7 @@ public class GameServer extends Thread {
 		String map = gridStr.split("@")[0].split("m\\[")[1];
 		
 		// Grille
-		Grid grid = new Grid(size, size);
+		Grid grid = new Grid(size);
 		
 		System.out.println(map);
 		String[] lines = map.split("\\$");
@@ -169,17 +169,17 @@ public class GameServer extends Thread {
 				tile = tile.replace("]", "");
 				String[] values = tile.split(";");
 				
-				Tile.Type type;
+				TileType type;
 				if(values[0].equals("F"))
-					type = Tile.Type.FOREST;
+					type = TileType.FOREST;
 				else if(values[0].equals("M"))
-					type = Tile.Type.MOUNTAIN;
+					type = TileType.MOUNTAIN;
 				else if(values[0].equals("R"))
-					type = Tile.Type.RIVER;
+					type = TileType.RIVER;
 				else if(values[0].equals("P"))
-					type = Tile.Type.LOWLAND;
+					type = TileType.LOWLAND;
 				else
-					type = Tile.Type.LOWLAND;
+					type = TileType.LOWLAND;
 				
 				Tile newTile = new Tile(mapX, mapY, type);
 				grid.setTile(mapX, mapY, newTile);
