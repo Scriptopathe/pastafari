@@ -60,6 +60,8 @@ public abstract class Unit {
 			to.setUnit(this);
 			this.setTile(to);
 			
+			to.setOwner(this.player);
+			
 			this.currentAction -= cost;
 		}
 	}
