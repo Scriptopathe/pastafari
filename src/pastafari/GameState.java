@@ -6,11 +6,12 @@ public class GameState {
 	private HashMap<Integer, Player> players;
 	private Grid grid;
 	private int size;
-	private int id;
+	private int myId;
 	
-	public GameState(int size) {
+	public GameState(int size, int myId) {
 		this.players = new HashMap<>();
 		this.grid = new Grid(size);
+		this.myId = myId;
 	}
 	
 	public Grid getGrid() {
@@ -27,5 +28,9 @@ public class GameState {
 	
 	public int getSize() {
 		return size;
+	}
+	
+	public Player getMyPlayer() {
+		return this.players.get(this.myId);
 	}
 }
