@@ -74,7 +74,7 @@ public class GameServer extends Thread {
 	
 	private boolean processResponse(String srvResponse)
 	{
-		parseGrid(srvResponse);
+		updateState(srvResponse);
 		return srvResponse.contains("OK");
 	}
 	
@@ -118,11 +118,15 @@ public class GameServer extends Thread {
 		}
 		
 		// Premier tour : la map
-		this.parseGrid(this.receive());
+		this.updateState(this.receive());
 		
 		while(true)
 		{
 			String input = this.receive();
+			if(input.contains(":ok:") || input.contains(":ko:"))
+			{
+				this.updateState(input);
+			}
 			// Changement de tour
 			if(input.contains("player") && input.contains("turn"))
 			{
@@ -139,15 +143,11 @@ public class GameServer extends Thread {
 	
 	private void updateState(String gridStr)
 	{
-		boolean parsingMap = false;
-		boolean parsingUnits = false;
 		int mapX = 0;
 		int mapY = 0;
-		int dataId = 0;
-		int depth = -1;
 		
 		// Taille de la map
-		int len = gridStr.split("U")[0].replaceAll("[^\\[]", "").length();
+		int len = gridStr.split("u")[0].replaceAll("[^\\[]", "").length();
 		int size = (int)Math.sqrt(len);
 		int players = 2;
 		System.out.println("Size = " + size);
@@ -199,23 +199,16 @@ public class GameServer extends Thread {
 				// Setup du tile
 				Player owner = state.getPlayer(Integer.parseInt(values[3]));
 				newTile.setOwner(owner);
-				newTile.setUnit(Unit.unitFrom(values[1], newTile, owner));
-				newTile.setBuilding(Building.buildingFrom(values[2], mapX, mapY));
+				newTile.setUnit(Unit.unitFrom(values[1], -1, newTile, owner));
+				newTile.setBuilding(Building.buildingFrom(values[2], newTile));
 				grid.setTile(mapX, mapY, newTile);
-				
-				
-				for(String value : values)
-				{
-					System.out.println("value: (" + mapX + ", " + mapY + ")" + value);
-				}
+		
 				mapX += 1;
 			}
 			mapY += 1;
 			mapX = 0;
 		}
 		
-
-
 		// Parsing de la 2e partie du fichier.
 		String[] playerUnits = gridStr.split("@u")[1].split(":p[0-9]:");
 		for(int player = 1; player < playerUnits.length; player++)
