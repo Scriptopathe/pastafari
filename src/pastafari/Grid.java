@@ -49,16 +49,9 @@ public class Grid {
 	
 	public ArrayList<Tile> getNeighbors(Tile tile, boolean allowRiver) {
 		ArrayList<Tile> neighs = new ArrayList<>();
-		for(int i = -1; i <= 1; i ++) {
-			for(int j = -1; j <= -1; j++) {
-				if(i == 0 && j == 0) continue;
-				
-				int x = tile.getX() + i;
-				int y = tile.getY() + j;
-				
-				if(x < 0 || x >= this.size || y < 0 || y >= this.size) continue;
-				
-				Tile t = this.tiles[x][y];
+		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
+			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
+				Tile t = this.tiles[i][j];
 				if((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER) {
 					neighs.add(t);
 				}
