@@ -74,9 +74,7 @@ public class Grid {
 					peak[i][j] = 1;
 				else
 					peak[i][j] = 0;
-				System.out.print(" "+peak[i][j]);
 			}
-			System.out.println();
 		}
 
 		double result[][] = new double [this.size][this.size];
@@ -100,7 +98,6 @@ public class Grid {
 					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
 					q.add(new int[]{k, l});
 				}
-				//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 			}
 			
 			for(int k = 0; k < this.size; k++)
