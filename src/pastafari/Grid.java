@@ -2,12 +2,11 @@ package pastafari;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.stream.Stream;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
 import pastafari.structures.City;
-import pastafari.units.Peasant;
+import pastafari.units.UnitType;
 
 public class Grid {
 	private Tile[][] tiles;
@@ -74,10 +73,10 @@ public class Grid {
 	
 	public double[][] getPeasantMatrice(){
 		double peak[][] = new double [this.size][this.size];
-		Peasant lambda = new Peasant(0, null, null);
+		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && lambda.canMove(tiles[i][j]))
+				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, 2, tiles[i][j]))
 					peak[i][j] = 1;
 				else
 					peak[i][j] = 0;
@@ -102,10 +101,11 @@ public class Grid {
 				
 				// Neighbor
 				for (int k = Math.max(p[0]-1, 0); k <= Math.min(p[0]+1, size-1); k++)
-				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++)
-				if(tmp[k][l] == 0 && lambda.canMove(this.tiles[k][l])){
+				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++) {
+				if(tmp[k][l] == 0 && canMove(false, 2, this.tiles[k][l])) {
 					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
 					q.add(new int[]{k, l});
+				}
 				}
 				//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 			}
@@ -116,5 +116,18 @@ public class Grid {
 		}
 		
 		return result;
+	}
+	
+
+	public static boolean canMove(boolean isEngineer, int action, Tile to) {
+		if(to.getUnitType() != UnitType.VOID) return false;
+		if(to.getType() == TileType.RIVER && !(isEngineer || to.getBuildingType() == BuildingType.BRIDGE)) return false;
+		
+		int cost = 2;
+		
+		if(to.getType() == TileType.MOUNTAIN) cost += 2;
+		if(to.getBuildingType() == BuildingType.ROAD) cost /= 2;
+		
+		return cost <= action;
 	}
 }
