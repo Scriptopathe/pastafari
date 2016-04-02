@@ -4,9 +4,8 @@ import pastafari.Tile;
 
 public class City extends Building {
 	public static final int BUILD_COST = 0;
-	public static final int MAX_HP = 10;
 	
 	public City(Tile tile) {
-		super(tile, BUILD_COST, MAX_HP, BuildingType.CITY);
+		super(tile, BUILD_COST, BuildingType.CITY);
 	}
 }

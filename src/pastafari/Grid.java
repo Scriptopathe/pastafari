@@ -2,6 +2,10 @@ package pastafari;
 
 import java.util.LinkedList;
 
+import pastafari.structures.Building;
+import pastafari.structures.BuildingType;
+import pastafari.structures.City;
+
 public class Grid {
 	private Tile[][] tiles;
 	private int size;
@@ -15,6 +19,22 @@ public class Grid {
 	
 	public Tile getTile(int x, int y) {
 		return this.tiles[x][y];
+	}
+	
+	public City getCity()
+	{
+		for(int x = 0; x < size; x++)
+		{
+			for(int y = 0; y < size; y++)
+			{
+				Building b = tiles[x][y].getBuilding();
+				if(b != null && b.getType() == BuildingType.CITY)
+					return (City)b;
+					
+			}
+		}
+		System.out.println("Grid.getCity(): no city found !!");
+		return null;
 	}
 	
 	public int getSize() {

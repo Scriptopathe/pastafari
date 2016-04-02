@@ -5,5 +5,6 @@ public enum BuildingType {
 	CASTLE,
 	CITY,
 	HOSPITAL,
-	ROAD
+	ROAD,
+	VOID
 }

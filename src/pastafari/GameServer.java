@@ -7,6 +7,8 @@ import java.net.Socket;
 import java.util.Scanner;
 
 import ia.IAInterface;
+import pastafari.structures.Building;
+import pastafari.units.Unit;
 
 public class GameServer extends Thread {
 	boolean verbose = true;
@@ -15,6 +17,7 @@ public class GameServer extends Thread {
 	BufferedReader inClient;
 	Scanner scanIn;
 	IAInterface ia;
+	GameState state;
 	int myId;
 	int currentPlayer;
 	int playersCount = 2;
@@ -134,9 +137,8 @@ public class GameServer extends Thread {
 		}
 	}
 	
-	private Grid parseGrid(String gridStr)
+	private void updateState(String gridStr)
 	{
-		
 		boolean parsingMap = false;
 		boolean parsingUnits = false;
 		int mapX = 0;
@@ -147,6 +149,7 @@ public class GameServer extends Thread {
 		// Taille de la map
 		int len = gridStr.split("U")[0].replaceAll("[^\\[]", "").length();
 		int size = (int)Math.sqrt(len);
+		int players = 2;
 		System.out.println("Size = " + size);
 		
 		// Preprocess
@@ -155,10 +158,18 @@ public class GameServer extends Thread {
 		System.out.println(gridStr);
 		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
-		// Grille
+		// Création du nouveau state
+		GameState state = new GameState(size, myId);
 		Grid grid = new Grid(size);
+		state.setGrid(grid);
 		
-		System.out.println(map);
+		// Création des joueurs
+		for(int player = 0; player < players; player++)
+		{
+			state.addPlayer(new Player(player, player == myId));
+		}
+		
+		// ---- DEBUT PARSE
 		String[] lines = map.split("\\$");
 		for(int i = 0; i < lines.length - 1; i++)
 		{
@@ -186,8 +197,10 @@ public class GameServer extends Thread {
 				
 				Tile newTile = new Tile(mapX, mapY, type);
 				// Setup du tile
-				
-				
+				Player owner = state.getPlayer(Integer.parseInt(values[3]));
+				newTile.setOwner(owner);
+				newTile.setUnit(Unit.unitFrom(values[1], newTile, owner));
+				newTile.setBuilding(Building.buildingFrom(values[2], mapX, mapY));
 				grid.setTile(mapX, mapY, newTile);
 				
 				
@@ -201,36 +214,42 @@ public class GameServer extends Thread {
 			mapX = 0;
 		}
 		
-		
-		System.out.println("kokoko: " + gridStr.split("@u")[1]);
+
+
+		// Parsing de la 2e partie du fichier.
 		String[] playerUnits = gridStr.split("@u")[1].split(":p[0-9]:");
-		
 		for(int player = 1; player < playerUnits.length; player++)
 		{
+			int playerId = player - 1;
 			playerUnits[player] = playerUnits[player].replace("[", "").replace("]", "");
 			String[] units = playerUnits[player].split(";");
-			System.out.println("player: " + playerUnits[player]);
 			for(int unitId = 0; unitId < units.length - 1; unitId++)
 			{
 				String unit = units[unitId];
 				String[] values = unit.split(",");
 				if(values.length < 5)
 					continue;
-				System.out.println("prout: " + unit);
+
 				int id = Integer.parseInt(values[0]);
 				int actions = Integer.parseInt(values[1]);
 				int life = Integer.parseInt(values[2]);
 				int x = Integer.parseInt(values[3]);
 				int y = Integer.parseInt(values[4]);
 				
-				// grid.getTile(x, y).getUnit().setHP(life);
-				// grid.getTile(x, y).getUnit().setAction(action);
+				grid.getTile(x, y).getUnit().setID(id);
+				grid.getTile(x, y).getUnit().setCurrentHP(life);
+				grid.getTile(x, y).getUnit().setCurrentAction(actions);
 			}
 			
 			String goldStr = units[units.length-1].replace(";", "").replace(":", "").replace("$", "");
-			System.out.println("gold: " + goldStr);
+			
+			state.getPlayer(playerId).setGold(Integer.parseInt(goldStr));
+			state.getPlayer(playerId).setCity(state.getGrid().getCity());
 		}
 		
-		return grid;
+		this.state = state;
 	}
+	
+	
+
 }

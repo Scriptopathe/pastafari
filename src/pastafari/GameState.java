@@ -18,6 +18,11 @@ public class GameState {
 		return grid;
 	}
 	
+	public void setGrid(Grid grid)
+	{
+		this.grid = grid;
+	}
+	
 	public void addPlayer(Player player) {
 		this.players.put(player.getId(), player);
 	}
@@ -33,4 +38,6 @@ public class GameState {
 	public Player getMyPlayer() {
 		return this.players.get(this.myId);
 	}
+	
+	
 }

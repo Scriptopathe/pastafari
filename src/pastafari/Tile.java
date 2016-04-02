@@ -3,6 +3,7 @@ package pastafari;
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
 import pastafari.units.Unit;
+import pastafari.units.UnitType;
 
 public class Tile {
 
@@ -25,6 +26,16 @@ public class Tile {
 	
 	public int getY() {
 		return y;
+	}
+	
+	public BuildingType getBuildingType() {
+		if(this.getBuilding() == null) return BuildingType.VOID;
+		else return this.getBuilding().getType();
+	}
+	
+	public UnitType getUnitType() {
+		if(this.getUnit() == null) return UnitType.VOID;
+		else return this.getUnit().getType();
 	}
 	
 	public Building getBuilding() {
