@@ -11,7 +11,7 @@ public class Peasant extends Unit {
 	public static final int RANGE = 1;
 	public static final int COST = 10;
 	
-	public Peasant(Tile tile, Player player) {
-		super(player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST);
+	public Peasant(int id, Tile tile, Player player) {
+		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.PEASANT);
 	}
 }

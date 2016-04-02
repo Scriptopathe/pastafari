@@ -169,17 +169,17 @@ public class GameServer extends Thread {
 				tile = tile.replace("]", "");
 				String[] values = tile.split(";");
 				
-				Tile.Type type;
+				TileType type;
 				if(values[0].equals("F"))
-					type = Tile.Type.FOREST;
+					type = TileType.FOREST;
 				else if(values[0].equals("M"))
-					type = Tile.Type.MOUNTAIN;
+					type = TileType.MOUNTAIN;
 				else if(values[0].equals("R"))
-					type = Tile.Type.RIVER;
+					type = TileType.RIVER;
 				else if(values[0].equals("P"))
-					type = Tile.Type.LOWLAND;
+					type = TileType.LOWLAND;
 				else
-					type = Tile.Type.LOWLAND;
+					type = TileType.LOWLAND;
 				
 				Tile newTile = new Tile(mapX, mapY, type);
 				grid.setTile(mapX, mapY, newTile);

@@ -12,7 +12,7 @@ public class Paladin extends Unit {
 	public static final int RANGE = 1;
 	public static final int COST = 100;
 	
-	public Paladin(Tile tile, Player player) {
-		super(player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST);
+	public Paladin(int id, Tile tile, Player player) {
+		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.PALADIN);
 	}
 }

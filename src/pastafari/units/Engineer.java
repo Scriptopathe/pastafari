@@ -11,8 +11,8 @@ public class Engineer extends Unit {
 	public static final int RANGE = 0;
 	public static final int COST = 50;
 	
-	public Engineer(Tile tile, Player player) {
-		super(player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST);
+	public Engineer(int id, Tile tile, Player player) {
+		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.ENGINEER);
 	}
 }
 

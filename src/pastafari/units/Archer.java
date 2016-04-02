@@ -12,8 +12,8 @@ public class Archer extends RangedUnit {
 	public static final int MAX_RANGE = 3;
 	public static final int COST = 60;
 	
-	public Archer(Tile tile, Player player) {
-		super(player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, MIN_RANGE, MAX_RANGE, COST);
+	public Archer(int id, Tile tile, Player player) {
+		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, MIN_RANGE, MAX_RANGE, COST, UnitType.ARCHER);
 	}
 
 }
