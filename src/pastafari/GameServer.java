@@ -21,6 +21,9 @@ public class GameServer extends Thread {
 	int myId;
 	int currentPlayer;
 	int playersCount = 2;
+	
+	
+	
 	public GameServer(String ip, int port, IAInterface ia)	{
 
 		try {
@@ -246,5 +249,13 @@ public class GameServer extends Thread {
 	}
 	
 	
+	/**
+	 * Obtient le game state actuel.
+	 * @return
+	 */
+	public GameState getGameState()
+	{
+		return this.state;
+	}
 
 }
