@@ -29,8 +29,8 @@ public class Grid {
 		return;
 	}
 	
-	public static double getDistance(Tile from, Tile to) {
-		return Math.sqrt(Math.pow((from.getX() - to.getX()), 2) + Math.pow(from.getY()- to.getY(), 2));
+	public static int getDistance(Tile from, Tile to) {
+		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));
 	}
 	
 	public double[][] getPeasantMatrice(){
