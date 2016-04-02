@@ -8,7 +8,9 @@ import java.util.Scanner;
 
 import ia.IAInterface;
 import pastafari.structures.Building;
+import pastafari.structures.BuildingType;
 import pastafari.units.Unit;
+import pastafari.units.UnitType;
 
 public class GameServer extends Thread {
 	boolean verbose = true;
@@ -73,6 +75,33 @@ public class GameServer extends Thread {
 		}
 		
 		this.send(command);
+		String response = this.receive();
+		return processResponse(response);
+	}
+	
+	public boolean sendAttack(int id, int x, int y){
+		this.send("A," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
+		String response = this.receive();
+		return processResponse(response);
+	}
+	
+	public boolean sendCreate(UnitType type){
+		if (type == UnitType.VOID)
+			return false;
+		
+		this.send("C," + Unit.getCharCode(type));
+		String response = this.receive();
+		return processResponse(response);
+	}
+	
+	public boolean sendBuild(int engineerId, BuildingType type){
+		this.send("B," + Integer.toString(engineerId) + "," + Building.getBuildingCode(type));
+		String response = this.receive();
+		return processResponse(response);
+	}
+	
+	public boolean sendMove(int id, int x, int y){
+		this.send("D," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 		String response = this.receive();
 		return processResponse(response);
 	}
@@ -163,12 +192,12 @@ public class GameServer extends Thread {
 		System.out.println(gridStr);
 		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
-		// Création du nouveau state
+		// Crï¿½ation du nouveau state
 		GameState state = new GameState(size, myId);
 		Grid grid = new Grid(size);
 		state.setGrid(grid);
 		
-		// Création des joueurs
+		// Crï¿½ation des joueurs
 		for(int player = 0; player < players; player++)
 		{
 			state.addPlayer(new Player(player, player == myId));

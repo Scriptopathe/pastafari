@@ -128,4 +128,38 @@ public abstract class Unit {
 	public void setID(int id) {
 		this.id = id;
 	}
+	
+	public static char getCharCode(UnitType type){
+		char c;
+		switch (type){
+		case ARCHER:
+			c = 'A';
+			break;
+		case BALLISTA:
+			c = 'B';
+			break;
+		case DWARF:
+			c = 'N';
+			break;
+		case ENGINEER:
+			c = 'I';
+			break;
+		case PALADIN:
+			c = 'C';
+			break;
+		case PEASANT:
+			c = 'P';
+			break;
+		case SCOUT:
+			c = 'E';
+			break;
+		case SOLDIER:
+			c = 'S';
+			break;
+		default:
+			c = 'V';
+			break;
+		}
+		return c;
+	}
 }
