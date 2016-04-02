@@ -116,14 +116,15 @@ public class GameServer extends Thread {
 		this.myId = Integer.parseInt(this.receive().replace("player", ""));
 		this.send("OK");
 		
+		// Premier tour : la map
+		this.updateState(this.receive());
+		
 		// Le joueur 0 commence.
 		if(myId == 0)
 		{
 			ia.makeTurn(this);
 		}
 		
-		// Premier tour : la map
-		this.updateState(this.receive());
 		
 		while(true)
 		{
@@ -163,12 +164,12 @@ public class GameServer extends Thread {
 		System.out.println(gridStr);
 		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
-		// Création du nouveau state
+		// Crï¿½ation du nouveau state
 		GameState state = new GameState(size, myId);
 		Grid grid = new Grid(size);
 		state.setGrid(grid);
 		
-		// Création des joueurs
+		// Crï¿½ation des joueurs
 		for(int player = 0; player < players; player++)
 		{
 			state.addPlayer(new Player(player, player == myId));

@@ -1,6 +1,6 @@
 package pastafari;
 
-import ia.IAInterface;
+import ia.IAtest;
 
 public class Main {
 
@@ -9,7 +9,7 @@ public class Main {
 		System.out.println("Hello");
 		for(int i = 0; i < 2; i++)
 		{
-			new GameServer("127.0.0.1", 8080, new IAInterface() {
+			new GameServer("127.0.0.1", 8080, new IAtest()/* new IAInterface() {
 				
 				@Override
 				public void makeTurn(GameServer srv) {
@@ -25,7 +25,7 @@ public class Main {
 					srv.endTurn();
 					srv.log("END TURN");
 				}
-			}).start();
+			}*/).start();
 		}
 		
 
