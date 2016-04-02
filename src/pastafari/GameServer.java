@@ -26,7 +26,7 @@ public class GameServer extends Thread {
 			this.inClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 			this.outClient = new PrintWriter(clientSocket.getOutputStream(), true);
 			this.ia = ia;
-			System.out.println("Start OK");
+			this.myId = -1;
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -35,12 +35,13 @@ public class GameServer extends Thread {
 		
 	}
 	
-	private String receive()
+	public String receive()
 	{
 		String in;
 		try {
-			in = inClient.readLine();
-			System.out.println("input: " + in);
+			this.log("receiving...");
+			in = inClient.readLine().toLowerCase();
+			this.log("input: " + in);
 			return in;
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -49,36 +50,73 @@ public class GameServer extends Thread {
 		return "";
 	}
 	
+	/**
+	 * Envoie une commande au serveur.
+	 * Retourne le résulat de la commande, et met à jour le GameState.
+	 * @param command
+	 * @return
+	 */
+	public String sendCommand(String command)
+	{
+		// Attrape bug !
+		if(command.equals("E"))
+		{
+			this.endTurn();
+			return "";
+		}
+		
+		this.send(command);
+		return this.receive();
+	}
+	
+	/** 
+	 * Marque la fin du tour du serveur.
+	 */
+	public void endTurn()
+	{
+		this.send("E");
+	}
+	
+	/**
+	 * Envoie un message au serveur.
+	 * @param command
+	 */
 	private void send(String command)
 	{
-		System.out.println("Client " + myId + " sends: " + command);
+		this.log("send: " + command);
 		outClient.println(command);
+	}
+	
+	public void log(String str)
+	{
+		System.out.println("[Client " + myId + "] " + str);
 	}
 	
 	public void run()
 	{
 		// Démarrage
-		System.out.println("Client starting");
 		this.myId = Integer.parseInt(this.receive().replace("player", ""));
 		this.send("OK");
-		System.out.println("Client started");
-		currentPlayer = 0;
-		myId = 0;
+		
+		// Le joueur 0 commence.
+		if(myId == 0)
+		{
+			ia.makeTurn(this);
+		}
+		
 		while(true)
 		{
 			String input = this.receive();
 			// Changement de tour
 			if(input.contains("player") && input.contains("turn"))
 			{
-				currentPlayer = Integer.parseInt(input.replace("player", "").replace("turn", ""));
+				int finished = Integer.parseInt(input.replace("player", "").replace("turn", "").trim());
+				currentPlayer = (finished + 1) % 2;
+				// Si c'est à notre tour, on lance l'IA.
 				if(currentPlayer == myId)
 				{
-					this.ia.makeTurn(this);
+					ia.makeTurn(this);
 				}
-			}
-			else
-			{
-				// update du game state
 			}
 		}
 	}
