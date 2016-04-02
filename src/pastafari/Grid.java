@@ -12,7 +12,6 @@ public class Grid {
 
 
 	public Grid(int size) {
-		// TODO Auto-generated constructor stub
 		this.tiles = new Tile[size][size];
 		this.size = size;
 	}

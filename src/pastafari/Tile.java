@@ -71,7 +71,6 @@ public class Tile {
 	}
 	
 	public boolean isAccessible(boolean iAmEngineer){
-		// ajouter le type bridge
-		return this.unit == null && (this.getType() != TileType.RIVER || iAmEngineer || getBuildingType() == BuildingType.BRIDGE);
+		return this.getUnitType() == UnitType.VOID && (this.getType() != TileType.RIVER || iAmEngineer || getBuildingType() == BuildingType.BRIDGE);
 	}
 }
