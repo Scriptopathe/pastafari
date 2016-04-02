@@ -138,8 +138,7 @@ public abstract class Unit {
 	public void setID(int id) {
 		this.id = id;
 	}
-	
-	
+
 	public static Unit unitFrom(String type, int id, Tile tile, Player player) {
 		if(type.equals("a")) return new Archer(id, tile, player);
 		else if(type.equals("b")) return new Ballista(id, tile, player);
@@ -150,5 +149,39 @@ public abstract class Unit {
 		else if(type.equals("e")) return new Scout(id, tile, player);
 		else if(type.equals("s")) return new Soldier(id, tile, player);
 		else return null;
+	}
+
+	public static char getCharCode(UnitType type){
+		char c;
+		switch (type){
+		case ARCHER:
+			c = 'A';
+			break;
+		case BALLISTA:
+			c = 'B';
+			break;
+		case DWARF:
+			c = 'N';
+			break;
+		case ENGINEER:
+			c = 'I';
+			break;
+		case PALADIN:
+			c = 'C';
+			break;
+		case PEASANT:
+			c = 'P';
+			break;
+		case SCOUT:
+			c = 'E';
+			break;
+		case SOLDIER:
+			c = 'S';
+			break;
+		default:
+			c = 'V';
+			break;
+		}
+		return c;
 	}
 }

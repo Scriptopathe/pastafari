@@ -33,4 +33,19 @@ public abstract class Building {
 		else if(type.equals("v")) return new City(tile);
 		else return null;
 	}
+	
+	public static char getBuildingCode(BuildingType type){
+		switch (type){
+		case BRIDGE:
+			return 'P';
+		case CASTLE:
+			return 'F';
+		case ROAD:
+			return 'R';
+		case HOSPITAL:
+			return 'H';
+		default:
+			return 'V';
+		}
+	}
 }

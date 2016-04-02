@@ -6,6 +6,8 @@ import pastafari.structures.City;
 import pastafari.units.Unit;
 
 public class Player {
+	public static Player NoPlayer = new Player(-1, false);
+	
 	private int id;
 	private int gold;
 	private boolean alive;

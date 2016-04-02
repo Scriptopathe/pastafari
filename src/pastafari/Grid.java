@@ -66,7 +66,8 @@ public class Grid {
 		double coeffs[][] = new double [this.size][this.size];
 		
 		for (int i = 0; i < this.size; i++){
-			for (int j = 0; j < this.size; j++){
+			for (int j = 0; j < this.size; j++)
+			if(result[i][j] > 0) {
 				LinkedList<int[]> q = new LinkedList<>();
 				double tmp[][] = new double [this.size][this.size];
 				tmp[i][j] = result[i][j];
@@ -83,9 +84,10 @@ public class Grid {
 							}
 						}
 					}
+					//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 				}
-				for (int k = -1; k < 2; k++){
-					for (int l = -1; l < 2; l++){
+				for (int k = 0; k < this.size; k++){
+					for (int l = 0; l < this.size; l++){
 						coeffs[k][l] += tmp[k][l];
 					}
 				}
