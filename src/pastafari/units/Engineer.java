@@ -2,6 +2,12 @@ package pastafari.units;
 
 import pastafari.Player;
 import pastafari.Tile;
+import pastafari.structures.Bridge;
+import pastafari.structures.Building;
+import pastafari.structures.BuildingType;
+import pastafari.structures.Castle;
+import pastafari.structures.Hospital;
+import pastafari.structures.Road;
 
 public class Engineer extends Unit {
 	public static final int STRENGTH = 0;
@@ -13,6 +19,33 @@ public class Engineer extends Unit {
 	
 	public Engineer(int id, Tile tile, Player player) {
 		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.ENGINEER);
+	}
+	
+	public boolean canBuild() {
+		return this.getCurrentAction() >= 2 && this.getTile().getBuildingType() == BuildingType.VOID;
+	}
+	
+	public void build(BuildingType type) {
+		if(this.canBuild()) {
+			Building built = null;
+			if(type == BuildingType.BRIDGE) built = new Bridge(this.getTile());
+			else if(type == BuildingType.CASTLE) built = new Castle(this.getTile());
+			else if(type == BuildingType.HOSPITAL) built = new Hospital(this.getTile());
+			else if(type == BuildingType.ROAD) built = new Road(this.getTile());
+			this.getTile().setBuilding(built);
+			this.setCurrentAction(this.getCurrentAction() - 2);
+		}
+	}
+	
+	public boolean canDestroy() {
+		return this.getCurrentAction() >= 2 && this.getTile().getBuildingType() != BuildingType.VOID;
+	}
+	
+	public void destroy() {
+		if(this.canDestroy()) {
+			this.getTile().setBuilding(null);
+			this.setCurrentAction(this.getCurrentAction() - 2);
+		}
 	}
 }
 

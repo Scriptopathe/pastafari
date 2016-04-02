@@ -1,6 +1,8 @@
 package pastafari;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.stream.Stream;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
@@ -13,7 +15,6 @@ public class Grid {
 
 
 	public Grid(int size) {
-		// TODO Auto-generated constructor stub
 		this.tiles = new Tile[size][size];
 		this.size = size;
 	}
@@ -45,10 +46,7 @@ public class Grid {
 	public void setTile(int x, int y, Tile tile) {
 		this.tiles[x][y] = tile;
 	}
-	
-	public void getMovingCost(Tile from, Tile to) {
-		return;
-	}
+
 	
 	public static int getDistance(Tile from, Tile to) {
 		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));

@@ -36,7 +36,6 @@ public class GameServer extends Thread {
 			this.outClient = new PrintWriter(clientSocket.getOutputStream(), true);
 			this.ia = ia;
 			this.myId = -1;
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,6 +67,11 @@ public class GameServer extends Thread {
 	 */
 	public boolean sendCommand(String command)
 	{
+		if(currentPlayer != myId)
+		{
+			throw new RuntimeException("send: " + command + "; Ce n'est plus le tour de l'IA " + myId + " mais de " + currentPlayer + " !");
+		}
+		
 		// Attrape bug !
 		if(command.equals("E"))
 		{
@@ -81,30 +85,22 @@ public class GameServer extends Thread {
 	}
 	
 	public boolean sendAttack(int id, int x, int y){
-		this.send("A," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
-		String response = this.receive();
-		return processResponse(response);
+		return this.sendCommand("A," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
 	public boolean sendCreate(UnitType type){
 		if (type == UnitType.VOID)
 			return false;
 		
-		this.send("C," + Unit.getCharCode(type));
-		String response = this.receive();
-		return processResponse(response);
+		return this.sendCommand("C," + Unit.getCharCode(type));
 	}
 	
 	public boolean sendBuild(int engineerId, BuildingType type){
-		this.send("B," + Integer.toString(engineerId) + "," + Building.getBuildingCode(type));
-		String response = this.receive();
-		return processResponse(response);
+		return this.sendCommand("B," + Integer.toString(engineerId) + "," + Building.getBuildingCode(type));
 	}
 	
 	public boolean sendMove(int id, int x, int y){
-		this.send("D," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
-		String response = this.receive();
-		return processResponse(response);
+		return this.sendCommand("D," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
 	private boolean processResponse(String srvResponse)
@@ -162,6 +158,7 @@ public class GameServer extends Thread {
 		}
 	}
 	
+	/** Lance le tour de l'IA */
 	private void makeTurn()
 	{
 		if(this.iaRunning)
@@ -170,9 +167,19 @@ public class GameServer extends Thread {
 			return;
 		}
 		this.iaRunning = true;
-		this.ia.makeTurn(this);
+		
+		try {
+			System.out.println("MAKE TURN " + this.myId);
+			this.ia.makeTurn(this);
+		}
+		catch(RuntimeException e)
+		{
+			e.printStackTrace();
+		}
+		
 		this.iaRunning = false;
 	}
+	
 	private void updateState(String gridStr)
 	{
 		int mapX = 0;
@@ -279,15 +286,13 @@ public class GameServer extends Thread {
 		{
 			int nextPlayer = Integer.parseInt(""+gridStr.charAt(0));
 			currentPlayer = nextPlayer;
-			log("nextPlayer " + nextPlayer + ", currentPlayer = " + currentPlayer);
-			if(!iaRunning)
+			if(!iaRunning && nextPlayer == myId)
 			{
-				currentPlayer = nextPlayer;
 				makeTurn();
 			}
 			else
 			{
-				log("datadada");
+
 			}
 		}
 	}
