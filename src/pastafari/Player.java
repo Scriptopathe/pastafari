@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import pastafari.structures.City;
 import pastafari.units.Unit;
+import pastafari.units.UnitType;
 
 public class Player {
 	public static Player NoPlayer = new Player(-1, false);
@@ -55,6 +56,78 @@ public class Player {
 	
 	public ArrayList<Unit> getUnits(){
 		return this.units;
+	}
+	
+	public int countArcher(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.ARCHER)
+				count++;
+		}
+		return count;
+	}
+	
+	public int countBallista(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.BALLISTA)
+				count++;
+		}
+		return count;
+	}
+	
+	public int countDwarf(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.DWARF)
+				count++;
+		}
+		return count;
+	}
+	
+	public int countEngineer(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.ENGINEER)
+				count++;
+		}
+		return count;
+	}
+	
+	public int countPaladin(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.PALADIN)
+				count++;
+		}
+		return count;
+	}
+	
+	public int countPeasant(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.PEASANT)
+				count++;
+		}
+		return count;
+	}
+
+	public int countScout(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.SCOUT)
+				count++;
+		}
+		return count;
+	}
+
+	public int countSoldier(){
+		int count = 0;
+		for (Unit u : this.units){
+			if (u.getType() == UnitType.SOLDIER)
+				count++;
+		}
+		return count;
 	}
 	
 	public void setCity(City c) {

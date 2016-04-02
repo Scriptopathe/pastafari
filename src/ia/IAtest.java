@@ -25,7 +25,6 @@ public class IAtest implements IAInterface {
 		// buy&move units
 		IACity city = new IACity();
 		city.makeTurn(srv);
-		
 		srv.endTurn();
 	}
 	
