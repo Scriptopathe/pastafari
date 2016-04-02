@@ -5,7 +5,6 @@ import java.util.HashMap;
 public class GameState {
 	private HashMap<Integer, Player> players;
 	private Grid grid;
-	private int size;
 	private int myId;
 
 	public GameState(int size, int myId) {
@@ -30,10 +29,6 @@ public class GameState {
 	
 	public Player getPlayer(int id) {
 		return this.players.get(id);
-	}
-	
-	public int getSize() {
-		return size;
 	}
 	
 	public Player getMyPlayer() {
