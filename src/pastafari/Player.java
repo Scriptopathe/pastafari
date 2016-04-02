@@ -1,16 +1,24 @@
 package pastafari;
 
+import java.util.ArrayList;
+
+import pastafari.units.Unit;
+
 public class Player {
 	private int id;
 	private int gold;
 	private boolean alive;
 	private boolean isMe;
 	
+	private ArrayList<Unit> units;
+	
 	public Player(int id, boolean isMe) {
 		this.id = id;
 		this.gold = 100;
 		this.alive = true;
 		this.isMe = isMe;
+		
+		this.units = new ArrayList<>();
 	}
 	
 	public void setAlive(boolean alive) {
@@ -35,5 +43,13 @@ public class Player {
 	
 	public boolean isMe() {
 		return isMe;
+	}
+	
+	public void addUnit(Unit u){
+		units.add(u);
+	}
+	
+	public ArrayList<Unit> getUnits(){
+		return this.units;
 	}
 }
