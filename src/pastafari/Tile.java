@@ -70,4 +70,8 @@ public class Tile {
 		return this.owner == null;
 	}
 	
+	public String toString()
+	{
+		return "(" + this.x + ", " + this.y + ")";
+	}
 }

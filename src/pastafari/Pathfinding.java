@@ -16,9 +16,11 @@ public class Pathfinding
 		public int pathCost;
 		public int heuristicCost;
 		public Tile tile;
+		public boolean marked;
 		public Label(Tile tile)
 		{
 			this.tile = tile;
+			this.marked = false;
 		}
 		
 		public int getTotalCost() { return pathCost + heuristicCost; }
@@ -64,13 +66,15 @@ public class Pathfinding
 		return 1000;
 	}
 	
-	public List<Tile> FindPath(Tile from, Tile to)
+	public List<Tile> FindPath(Tile from, Tile to, boolean allowRiver)
 	{
 		HashMap<Tile, Tile> cameFrom = new HashMap<>();
 		PriorityQueue<Label> openset = new PriorityQueue<>();
 		HashMap<Tile, Integer> closedSet = new HashMap<>();
 		
-		openset.add(new Label(from));
+		Label f = new Label(from);
+		f.heuristicCost = getHeuristicCost(from, to);
+		openset.add(f);
 		while(!openset.isEmpty())
 		{
 			Label next = openset.poll();
@@ -81,9 +85,13 @@ public class Pathfinding
 				break;
 			}
 			
-			List<Tile> neighboors = new ArrayList<Tile>();
+			List<Tile> neighboors = srv.getGameState().getGrid().getNeighbors(next.tile, allowRiver);
 			for(Tile neighboor : neighboors)
 			{
+				if(neighboor == next.tile)
+				{ 
+					System.out.println("nononono");
+				}
 				int cost = next.pathCost + getCost(neighboor);
 				int heuristicCost = getHeuristicCost(next.tile, neighboor);
 				int totalCost = cost + heuristicCost;
@@ -91,7 +99,7 @@ public class Pathfinding
 				{
 					int oldCost = closedSet.get(neighboor);
 					// Mise à jour si besoin
-					if(totalCost <= oldCost)
+					if(totalCost < oldCost)
 					{
 						closedSet.put(neighboor, totalCost);
 						Label label = new Label(neighboor);
@@ -113,7 +121,7 @@ public class Pathfinding
 		
 		List<Tile> tiles = new ArrayList<>();
 		Tile current = to;
-		while(current != null)
+		while(current != from)
 		{
 			tiles.add(current);
 			current = cameFrom.get(current);
