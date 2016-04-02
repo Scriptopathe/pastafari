@@ -17,7 +17,7 @@ public class GameServer extends Thread {
 	IAInterface ia;
 	int myId;
 	int currentPlayer;
-	
+	int playersCount = 2;
 	public GameServer(String ip, int port, IAInterface ia)	{
 
 		try {
@@ -39,7 +39,6 @@ public class GameServer extends Thread {
 	{
 		String in;
 		try {
-			this.log("receiving...");
 			in = inClient.readLine().toLowerCase();
 			this.log("input: " + in);
 			return in;
@@ -56,17 +55,23 @@ public class GameServer extends Thread {
 	 * @param command
 	 * @return
 	 */
-	public String sendCommand(String command)
+	public boolean sendCommand(String command)
 	{
 		// Attrape bug !
 		if(command.equals("E"))
 		{
 			this.endTurn();
-			return "";
+			return true;
 		}
 		
 		this.send(command);
-		return this.receive();
+		String response = this.receive();
+		return processResponse(response);
+	}
+	
+	private boolean processResponse(String srvResponse)
+	{
+		return srvResponse.contains("OK");
 	}
 	
 	/** 
@@ -87,6 +92,10 @@ public class GameServer extends Thread {
 		outClient.println(command);
 	}
 	
+	/**
+	 * Envoie un message de log à la console.
+	 * @param str
+	 */
 	public void log(String str)
 	{
 		System.out.println("[Client " + myId + "] " + str);
@@ -111,7 +120,7 @@ public class GameServer extends Thread {
 			if(input.contains("player") && input.contains("turn"))
 			{
 				int finished = Integer.parseInt(input.replace("player", "").replace("turn", "").trim());
-				currentPlayer = (finished + 1) % 2;
+				currentPlayer = (finished + 1) % playersCount;
 				// Si c'est à notre tour, on lance l'IA.
 				if(currentPlayer == myId)
 				{
