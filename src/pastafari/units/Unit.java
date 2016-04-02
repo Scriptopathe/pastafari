@@ -110,4 +110,12 @@ public abstract class Unit {
 	public int getId() {
 		return id;
 	}
+	
+	public void setCurrentHP(int currentHP) {
+		this.currentHP = currentHP;
+	}
+	
+	public void setCurrentAction(int currentAction) {
+		this.currentAction = currentAction;
+	}
 }
