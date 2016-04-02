@@ -116,19 +116,20 @@ public class Grid {
 
 		for(int i = 0; i < this.size; i++) {
 			StringBuilder buffer = new StringBuilder();
+			buffer.append("|");
 			for(int j = 0; j < this.size; j++) {
 				Tile tile = this.tiles[j][i];
 				
 				if(tile.getOwner().getId() >= 0) buffer.append(" ");
 				
-				buffer.append("|"); buffer.append(tile.getOwner().getId()); buffer.append(";");
+				buffer.append(tile.getOwner().getId()); buffer.append(";");
 				buffer.append(Building.getBuildingCode(tile.getBuildingType())); buffer.append(";");
 				buffer.append(Unit.getCharCode(tile.getUnitType())); buffer.append(";");
 				buffer.append("(").append(tile.getX()).append(",").append(tile.getY()).append(")").append(";");
 				buffer.append(tile.getType().toString().charAt(0)); buffer.append("|");
 			}
 			System.out.println(buffer.toString());
-			System.out.println(String.join("", Collections.nCopies(this.size * 16, "-")));
+			System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
 		}
 	}
 	

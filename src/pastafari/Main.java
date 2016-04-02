@@ -1,5 +1,7 @@
 package pastafari;
 
+import ia.IAAstar;
+import ia.IAHumanDebug;
 import ia.IAtest;
 
 public class Main {
