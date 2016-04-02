@@ -80,7 +80,7 @@ public class GameServer extends Thread {
 	private boolean processResponse(String srvResponse)
 	{
 		updateState(srvResponse);
-		return srvResponse.contains("OK");
+		return srvResponse.contains("ok");
 	}
 	
 	/** 
