@@ -46,10 +46,11 @@ public class IAtest implements IAInterface {
 				for(int i=-1;i<=1;i++)
 				for(int j=-1;j<=1;j++)
 				if(0<=i+x && i+x<game.getGrid().getSize() && 0<=y+j && y+j<game.getGrid().getSize()) {
-					System.out.println("PUSH HEAP?");
+					System.out.print("PUSH HEAP?");
 					if(mat[x][y] < mat[i+x][j+y]) {
+						System.out.print("Y");
 						sorted.add(new SortedPeasantMove((Peasant) u, mat[i+x][j+y], i+x, j+y));
-					}
+					}System.out.println();
 				}
 			}
 		}

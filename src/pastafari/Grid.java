@@ -65,11 +65,12 @@ public class Grid {
 	}
 	
 	public double[][] getPeasantMatrice(){
+		int actionPeasant = 2;
 		double peak[][] = new double [this.size][this.size];
 		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, 2, tiles[i][j]))
+				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, actionPeasant, tiles[i][j]))
 					peak[i][j] = 1;
 				else
 					peak[i][j] = 0;
@@ -94,11 +95,10 @@ public class Grid {
 				
 				// Neighbor
 				for (int k = Math.max(p[0]-1, 0); k <= Math.min(p[0]+1, size-1); k++)
-				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++) {
-				if(tmp[k][l] == 0 && canMove(false, 2, this.tiles[k][l])) {
+				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++)
+				if(tmp[k][l] == 0 && canMove(false, actionPeasant, this.tiles[k][l])) {
 					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
 					q.add(new int[]{k, l});
-				}
 				}
 				//System.out.println("p(0)=" + p[0] + ", p(1)=" + p[1] + "tmp=" + tmp[p[0] + 0][p[1] + 0]);
 			}
