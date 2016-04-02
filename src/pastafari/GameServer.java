@@ -34,6 +34,7 @@ public class GameServer extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(1);
 		}
 		
 	}
@@ -48,6 +49,7 @@ public class GameServer extends Thread {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			System.exit(1);
 		}
 		return "";
 	}
@@ -203,10 +205,10 @@ public class GameServer extends Thread {
 				newTile.setBuilding(Building.buildingFrom(values[2], newTile));
 				grid.setTile(mapX, mapY, newTile);
 		
-				mapX += 1;
+				mapY += 1;
 			}
-			mapY += 1;
-			mapX = 0;
+			mapX += 1;
+			mapY = 0;
 		}
 		
 		// Parsing de la 2e partie du fichier.

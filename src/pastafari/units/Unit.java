@@ -20,14 +20,14 @@ public abstract class Unit {
 	private UnitType type;
 	
 	public static Unit unitFrom(String type, int id, Tile tile, Player player) {
-		if(type == "A") return new Archer(id, tile, player);
-		else if(type == "B") return new Ballista(id, tile, player);
-		else if(type == "N") return new Dwarf(id, tile, player);
-		else if(type == "I") return new Engineer(id, tile, player);
-		else if(type == "C") return new Paladin(id, tile, player);
-		else if(type == "P") return new Peasant(id, tile, player);
-		else if(type == "E") return new Scout(id, tile, player);
-		else if(type == "S") return new Soldier(id, tile, player);
+		if(type.equals("a")) return new Archer(id, tile, player);
+		else if(type.equals("b")) return new Ballista(id, tile, player);
+		else if(type.equals("n")) return new Dwarf(id, tile, player);
+		else if(type.equals("i")) return new Engineer(id, tile, player);
+		else if(type.equals("c")) return new Paladin(id, tile, player);
+		else if(type.equals("p")) return new Peasant(id, tile, player);
+		else if(type.equals("e")) return new Scout(id, tile, player);
+		else if(type.equals("s")) return new Soldier(id, tile, player);
 		else return null;
 	}
 	

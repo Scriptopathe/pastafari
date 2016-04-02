@@ -27,10 +27,10 @@ public abstract class Building {
 	
 	public static Building buildingFrom(String type, Tile tile) {
 		if(type.equals("f")) return new Castle(tile);
-		else if(type.equals("R")) return new Road(tile);
-		else if(type.equals("P")) return new Bridge(tile);
-		else if(type.equals("H")) return new Hospital(tile);
-		else if(type.equals("V")) return new City(tile);
+		else if(type.equals("r")) return new Road(tile);
+		else if(type.equals("p")) return new Bridge(tile);
+		else if(type.equals("h")) return new Hospital(tile);
+		else if(type.equals("v")) return new City(tile);
 		else return null;
 	}
 }
