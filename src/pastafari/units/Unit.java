@@ -27,9 +27,6 @@ public abstract class Unit {
 		this.range = range;
 		this.tile = tile;
 		this.buildCost = buildCost;
-		
-		// add this unit to the list of unit of the player
-		//this.player
 	}
 	
 	public boolean canMove(Tile to) {
