@@ -63,6 +63,20 @@ public class Grid {
 		return neighs;
 	}
 	
+	public ArrayList<Tile> getFreeNeighbors(Tile tile, boolean allowRiver) {
+		ArrayList<Tile> neighs = new ArrayList<>();
+		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
+			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
+				if(i == tile.getX() && j == tile.getY()) continue;
+				Tile t = this.tiles[i][j];
+				if(t.getUnitType() == UnitType.VOID && ((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER)) {
+					neighs.add(t);
+				}
+			}
+		}
+		return neighs;	
+	}
+	
 	public static int getDistance(Tile from, Tile to) {
 		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));
 	}
