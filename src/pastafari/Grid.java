@@ -58,8 +58,8 @@ public class Grid {
 					for (int k = -1; k < 2; k++){
 						for (int l = -1; l < 2; l++){
 							if (p[0] + k >= 0 && p[0] + k < this.size && p[1] + l >= 0 && p[1] + l < this.size){
-								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].getType() != Tile.Type.RIVER){
-									tmp[p[0] + k][p[1] + l] = result[i][j] * 0.7;
+								if (tmp[p[0] + k][p[1] + l] == 0 && this.tiles[p[0] + k][p[1] + l].isAccessible()){
+									tmp[p[0] + k][p[1] + l] = tmp[i][j] * 0.7;
 									q.add(new int[]{p[0] + k, p[1] + l});
 								}
 							}
