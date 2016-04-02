@@ -1,6 +1,7 @@
 package pastafari;
 
 import pastafari.structures.Building;
+import pastafari.structures.BuildingType;
 import pastafari.units.Unit;
 
 public class Tile {
@@ -58,8 +59,8 @@ public class Tile {
 		return this.owner == null;
 	}
 	
-	public boolean isAccessible(){
+	public boolean isAccessible(boolean iAmEngineer){
 		// ajouter le type bridge
-		return this.unit == null && (this.getType() != TileType.RIVER);
+		return this.unit == null && (this.getType() != TileType.RIVER || iAmEngineer || building.getType() == BuildingType.BRIDGE);
 	}
 }
