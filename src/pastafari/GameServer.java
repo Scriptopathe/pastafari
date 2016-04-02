@@ -12,10 +12,10 @@ import pastafari.units.Unit;
 
 public class GameServer extends Thread {
 	boolean verbose = true;
+	public Scanner scanIn;
 	Socket clientSocket;
 	PrintWriter outClient;
 	BufferedReader inClient;
-	Scanner scanIn;
 	IAInterface ia;
 	GameState state;
 	int myId;
