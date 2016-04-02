@@ -14,10 +14,10 @@ import pastafari.units.UnitType;
 
 public class GameServer extends Thread {
 	boolean verbose = true;
+	public Scanner scanIn;
 	Socket clientSocket;
 	PrintWriter outClient;
 	BufferedReader inClient;
-	Scanner scanIn;
 	IAInterface ia;
 	GameState state;
 	int myId;
@@ -145,14 +145,15 @@ public class GameServer extends Thread {
 		this.myId = Integer.parseInt(this.receive().replace("player", ""));
 		this.send("OK");
 		
+		// Premier tour : la map
+		this.updateState(this.receive());
+		
 		// Le joueur 0 commence.
 		if(myId == 0)
 		{
 			ia.makeTurn(this);
 		}
 		
-		// Premier tour : la map
-		this.updateState(this.receive());
 		
 		while(true)
 		{

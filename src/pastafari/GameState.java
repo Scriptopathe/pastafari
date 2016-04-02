@@ -10,6 +10,7 @@ public class GameState {
 
 	public GameState(int size, int myId) {
 		this.players = new HashMap<>();
+		this.players.put(-1, Player.NoPlayer);
 		this.grid = new Grid(size);
 		this.myId = myId;
 	}
