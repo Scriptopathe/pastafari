@@ -65,7 +65,6 @@ public class IAArmy implements IAInterface {
 		if(u.getCurrentAction() > 0 && u.isAlive()) {
 			ArrayList<Tile> path = (ArrayList<Tile>) p.FindPath(u.getTile(), game.getPlayer(1-game.getMyPlayer().getId()).getCity().getTile(), u.getType() == UnitType.ENGINEER, true);
 			if(path.size() > 0) {
-				path.add(0, u.getTile());
 				sortedDest.add(new MoveToCity(u, path, game.getMyPlayer().getCity().getTile(), game.getPlayer(1-game.getMyPlayer().getId()).getCity().getTile()));
 			}
 		}
@@ -73,7 +72,7 @@ public class IAArmy implements IAInterface {
 		while(!sortedDest.isEmpty()) {
 			MoveToCity m = sortedDest.poll();
 			if(!m.u.isAlive()) continue;
-			if(Grid.canMove(m.u.getType()==UnitType.ENGINEER, m.u.getCurrentAction(), m.path.get(0))) continue;
+			if(!Grid.canMove(m.u.getType()==UnitType.ENGINEER, m.u.getCurrentAction(), m.path.get(0))) continue;
 			srv.sendMove(m.u.getId(), m.path.get(0).getX(), m.path.get(0).getY());
 		}
 	}

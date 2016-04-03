@@ -30,7 +30,7 @@ public class IADebile implements IAInterface {
 	}
 	
 	State state = State.Farming;
-	IACity city = new IACity();
+	IACity city = new IACity(true);
 	IAtest test = new IAtest();
 	@Override
 	public void makeTurn(GameServer srv) 
@@ -41,14 +41,14 @@ public class IADebile implements IAInterface {
 		test.moveExplore(gs);
 		test.srv = srv;
 		test.game = srv.getGameState();
-		
+
 		city.makeTurn(srv);
 		
 		// Gestion des paysants.
 		if(state == State.Farming)
 		{
-			srv.log("FARMING : " + srv.getGameState().getMyPlayer().countPeasant());
-			if(srv.getGameState().getMyPlayer().countPeasant() < 3)
+			srv.log("FARMING : " + srv.getGameState().getMyPlayer().countUnitByType(UnitType.PEASANT));
+			if(srv.getGameState().getMyPlayer().countUnitByType(UnitType.PEASANT) < 3)
 			{
 
 			}
@@ -100,10 +100,14 @@ public class IADebile implements IAInterface {
 			}
 			
 			// Si on est arrivé
-			
-			if(pathDone && srv.getGameState().getMyPlayer().getUnitById(atq.getId()).getCurrentAction() >= 2)
+			Unit updatedTarget = srv.getGameState().getOtherPlayer().getUnitById(s.target.getId());
+			if(updatedTarget != null && updatedTarget.isAlive())
 			{
-				srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getX());
+				if(pathDone && srv.getGameState().getMyPlayer().getUnitById(atq.getId()).getCurrentAction() >= 2)
+				{
+					srv.log("updated target = " + updatedTarget == null ? "null" : updatedTarget.isAlive() + " . " + updatedTarget.getCurrentHP());
+					srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getX());
+				}
 			}
 		}
 	}
@@ -120,7 +124,7 @@ public class IADebile implements IAInterface {
 			for(Tile tile : accessible)
 			{
 				int distance = Grid.getDistance(u.getTile(), tile);
-				if(distance <= u.getRange() && distance < minDistance)
+				if(distance < u.getRange() && distance < minDistance)
 				{
 					minDistance = distance;
 					as = new AttackState();
@@ -143,7 +147,7 @@ public class IADebile implements IAInterface {
 			if(eng.getTile().getType() == TileType.RIVER && eng.getTile().getBuildingType() != BuildingType.BRIDGE)
 				srv.sendBuild(eng.getId(), BuildingType.BRIDGE);
 			
-			List<Tile> path = p.FindRealPath(eng.getTile(), target.getTile(), true);
+			List<Tile> path = p.FindBestPath(eng.getTile(), target.getTile(), true);
 			for(Tile t : path)
 			{
 				

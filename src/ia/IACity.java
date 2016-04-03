@@ -14,6 +14,8 @@ import pastafari.units.UnitType;
 
 public class IACity implements IAInterface{
 	
+	private boolean limitEngineer;
+	private int leftUnits;
 	public int MAX_PEASANT;
 	public int createdPeasant;
 	private Pathfinding path;
@@ -109,11 +111,14 @@ public class IACity implements IAInterface{
 					}
 				}else{
 					// sinon on dépense!
-					if (gold > 50 && pMe.countEngineer() <= state.getGrid().getSize() / 5 && !engCreated){
+					if (gold > 50 && 
+							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5 - 1)
+									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < 3))
+										&& !engCreated){
 						srv.sendCreate(UnitType.ENGINEER);
 						engCreated = true;
 						action = true;
-					}else if (gold > 10 && pMe.countPeasant() < MAX_PEASANT){
+					}else if (gold > 10 && pMe.countUnitByType(UnitType.PEASANT) < MAX_PEASANT){
 						srv.sendCreate(UnitType.PEASANT);
 						createdPeasant++;
 						action = true;
@@ -124,7 +129,7 @@ public class IACity implements IAInterface{
 						}else if(gold > 60){
 							r = (int)(Math.random() * (units.length - 3));
 						}else if (gold > 50){
-							r = (int)(Math.random() * 2);
+							r = (int)(Math.random() * leftUnits);
 						}
 						if (r != -1){
 							srv.sendCreate(units[r]);
@@ -136,7 +141,12 @@ public class IACity implements IAInterface{
 		} while (action);
 	}
 	
-	public IACity(){
+	public IACity(boolean limitEngineer){
+		this.limitEngineer = limitEngineer;
+		if (this.limitEngineer){
+			leftUnits = 1;
+			units = new UnitType[]{UnitType.SCOUT, UnitType.ARCHER, UnitType.SOLDIER, UnitType.BALLISTA, UnitType.PALADIN, UnitType.DWARF};
+		}
 	}
 	
 	// on essaye de se rapprocher le plus de la cité ennemie

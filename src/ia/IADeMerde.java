@@ -37,16 +37,21 @@ public class IADeMerde implements IAInterface {
 		System.out.println("ENGINEER: " + winner.getTile().getX() + "," + winner.getTile().getY());
 		System.out.println("CITY: " + ennemyCity.getTile().getX() + "," + ennemyCity.getTile().getY());
 
-		while(winner.getCurrentAction() >= 2 && !isEnnemyCity(winner.getTile())) {
-			List<Tile> path = new Pathfinding(srv).FindPath(winner.getTile(), ennemyCity.getTile(), true, true);
-			System.out.println(path);
+		while(!isEnnemyCity(winner.getTile())) {
+			List<Tile> path = new Pathfinding(srv).FindPath(winner.getTile(), ennemyCity.getTile(), true, false);
 			Tile nextTile = path.get(0);
-			srv.sendMove(winner.getId(), nextTile.getX(), nextTile.getY());
+			if(winner.canMove(nextTile)) {
+				srv.sendMove(winner.getId(), nextTile.getX(), nextTile.getY());
+				winner.moveTo(nextTile);
+			} else {
+				break;
+			}
 		}
 		
 		if(isEnnemyCity(winner.getTile()) && winner.canDestroy()) {
 			srv.sendDestroy(winner.getId());
 		}
+		winner.newTurn();
 		srv.endTurn();
 	}
 }

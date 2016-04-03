@@ -15,7 +15,7 @@ import pastafari.units.UnitType;
 public class IAtest implements IAInterface {
 	GameState game;
 	GameServer srv;
-	IACity city = new IACity();
+	IACity city = new IACity(false);
 	
 	@Override
 	public void makeTurn(GameServer srv) {
@@ -24,11 +24,14 @@ public class IAtest implements IAInterface {
 //		game.getGrid().display();
 		//srv.sendCommand(""); 
 		// move to attack
+		System.out.println("-- Explore ----------------");
 		moveExplore(game);
+		System.out.println("-- Army -------------------");
 		IAArmy army = new IAArmy();
 		army.makeTurn(srv);
 		
 		// buy&move units
+		System.out.println("-- City -------------------");
 		city.makeTurn(srv);
 		
 		srv.endTurn();
@@ -60,8 +63,9 @@ public class IAtest implements IAInterface {
 		HashSet<Integer> done = new HashSet<>();
 		while(!sorted.isEmpty()) {
 			SortedPeasantMove spm = sorted.poll();
-			if(done.add(spm.p.getId()) && Grid.canMove(false, spm.p.getCurrentAction(), game.getGrid().getTile(spm.dx, spm.dy)) && game.getGrid().getTile(spm.dx, spm.dy).getBuilding() != me.getCity()) {
-				srv.sendMove(spm.p.getId(), spm.dx, spm.dy);
+			if(done.add(spm.p.getId()) && Grid.canMove(false, spm.p.getCurrentAction(), game.getGrid().getTile(spm.dx, spm.dy)) && game.getGrid().getTile(spm.dx, spm.dy).getBuilding() != me.getCity() && mat[spm.dx][spm.dy] > 0) {
+				if (srv.sendMove(spm.p.getId(), spm.dx, spm.dy))
+					mat[spm.dx][spm.dy] = 0;
 			}
 		}
 	}

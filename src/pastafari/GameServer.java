@@ -178,6 +178,9 @@ public class GameServer extends Thread {
 		{
 			e.printStackTrace();
 		}
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
 		this.iaRunning = false;
 	}
