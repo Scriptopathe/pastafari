@@ -89,7 +89,7 @@ public class Pathfinding
 			Tile t = stack.pop();
 			tiles.add(t);
 			
-			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(t, true, true))
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(t, true, ignoreEnnemy))
 			{
 				if(closedSet.contains(neigh))
 					continue;
@@ -205,6 +205,132 @@ public class Pathfinding
 		
 		return tiles;
 	}
-	
-	
+	/**
+	 * Trouve un chemin réellement faisable.
+	 * @param from
+	 * @param to
+	 * @param allowRiver
+	 * @param ignoreEnnemy
+	 * @return
+	 */
+	public List<Tile> FindRealPath(Tile from, Tile to, boolean allowRiver)
+	{
+		HashMap<Tile, Tile> cameFrom = new HashMap<>();
+		PriorityQueue<Label> openset = new PriorityQueue<>();
+		HashMap<Tile, Integer> closedSet = new HashMap<>();
+		boolean found = false;
+		Label f = new Label(from);
+		f.heuristicCost = getHeuristicCost(from, to);
+		openset.add(f);
+		
+		closedSet.put(from, 0);
+		cameFrom.put(from, null);
+		while(!openset.isEmpty()) {
+			Label currentTile = openset.poll();
+			
+			if(currentTile.tile.equals(to))
+			{
+				found = true;
+				break;
+			}
+			
+			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+
+				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
+				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
+					closedSet.put(neigh, newCost);
+					Label label = new Label(neigh);
+					label.heuristicCost = getHeuristicCost(to, neigh);
+					label.pathCost = newCost;
+					openset.add(label);
+					cameFrom.put(neigh, currentTile.tile);
+				}
+			}
+		}
+		
+		
+		List<Tile> tiles = new ArrayList<>();
+		if(found)
+		{
+			Tile current = to;
+			while(!current.equals(from))
+			{
+				tiles.add(0, current);
+				current = cameFrom.get(current);
+			}
+		}
+
+		
+		return tiles;
+	}
+	/**
+	 * Trouve un chemin réellement faisable.
+	 * @param from
+	 * @param to
+	 * @param allowRiver
+	 * @param ignoreEnnemy
+	 * @return
+	 */
+	public List<Tile> FindBestPath(Tile from, Tile to, boolean allowRiver)
+	{
+		HashMap<Tile, Tile> cameFrom = new HashMap<>();
+		PriorityQueue<Label> openset = new PriorityQueue<>();
+		HashMap<Tile, Integer> closedSet = new HashMap<>();
+		boolean found = false;
+		Label f = new Label(from);
+		f.heuristicCost = getHeuristicCost(from, to);
+		openset.add(f);
+		
+		Label candidate = null;
+		
+		closedSet.put(from, 0);
+		cameFrom.put(from, null);
+		while(!openset.isEmpty()) {
+			Label currentTile = openset.poll();
+			
+			if(currentTile.tile.equals(to))
+			{
+				found = true;
+				break;
+			}
+			else
+			{
+				if(currentTile.heuristicCost < candidate.heuristicCost)
+				{
+					candidate = currentTile;
+				}
+			}
+			
+			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+
+				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
+				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
+					closedSet.put(neigh, newCost);
+					Label label = new Label(neigh);
+					label.heuristicCost = getHeuristicCost(to, neigh);
+					label.pathCost = newCost;
+					openset.add(label);
+					cameFrom.put(neigh, currentTile.tile);
+				}
+			}
+		}
+		
+		
+		List<Tile> tiles = new ArrayList<>();
+		if(!found)
+		{
+			to = candidate.tile;
+		}
+		
+		Tile current = to;
+		while(!current.equals(from))
+		{
+			tiles.add(0, current);
+			current = cameFrom.get(current);
+		}
+		
+
+		
+		return tiles;
+	}
 }

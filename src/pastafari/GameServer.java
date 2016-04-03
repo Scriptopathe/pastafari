@@ -140,7 +140,6 @@ public class GameServer extends Thread {
 	private boolean processResponse(String srvResponse)
 	{
 		updateState(srvResponse);
-//		if(srvResponse.contains("ko")) System.exit(0);
 		return srvResponse.contains("ok");
 	}
 	
@@ -317,6 +316,7 @@ public class GameServer extends Thread {
 			state.getPlayer(playerId).setCity(state.getGrid().getCity(playerId));
 		}
 		
+		state.getMyPlayer().setDifferentEngineer();
 		this.state = state;
 		
 		// Next player
