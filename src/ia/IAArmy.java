@@ -56,6 +56,7 @@ public class IAArmy implements IAInterface {
 			if(!t.hunter.isAlive()) continue;
 			if(t.hunter.getCurrentAction() < 2) continue;
 			if(!t.target.isAlive()) continue;
+			
 			srv.sendAttack(t.hunter.getId(), t.target.getTile().getX(), t.target.getTile().getY());
 		}
 		
