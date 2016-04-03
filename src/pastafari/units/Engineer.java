@@ -17,8 +17,12 @@ public class Engineer extends Unit {
 	public static final int RANGE = 0;
 	public static final int COST = 50;
 	
+	private boolean different;
+	
 	public Engineer(int id, Tile tile, Player player) {
 		super(id, player, tile, STRENGTH, DEFENSE, MAX_ACTION, MAX_HP, RANGE, COST, UnitType.ENGINEER);
+		
+		this.different = false;
 	}
 	
 	public boolean canBuild() {
@@ -46,6 +50,14 @@ public class Engineer extends Unit {
 			this.getTile().setBuilding(null);
 			this.setCurrentAction(this.getCurrentAction() - 2);
 		}
+	}
+	
+	public boolean isDifferent(){
+		return this.different;
+	}
+	
+	public void setDifferent(){
+		this.different = true;
 	}
 }
 

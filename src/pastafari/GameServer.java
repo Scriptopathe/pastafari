@@ -284,6 +284,7 @@ public class GameServer extends Thread {
 			state.getPlayer(playerId).setCity(state.getGrid().getCity(playerId));
 		}
 		
+		state.getMyPlayer().setDifferentEngineer();
 		this.state = state;
 		
 		// Next player

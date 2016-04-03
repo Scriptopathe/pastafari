@@ -30,11 +30,13 @@ public class IACity implements IAInterface{
 		Player pEnem;
 		boolean action;
 		boolean engCreated = false;
+		boolean srvMsg;
 		City city = pMe.getCity();
 		
 		do{
 			// on suppose qu'on a fait aucune action
 			action = false;
+			srvMsg = true;
 			
 			// on récupère le dernier state à jour
 			state = srv.getGameState();
@@ -68,11 +70,11 @@ public class IACity implements IAInterface{
 				if (myCity.getTile().getUnitType() == UnitType.VOID){
 					// on essaye de créer un MNS
 					if (gold > 100){
-						srv.sendCreate(UnitType.DWARF);
+						srvMsg = srv.sendCreate(UnitType.DWARF);
 						action = true;
 					}else if (gold > 10){
 						// sinon on se rabat sur le paysant
-						srv.sendCreate(UnitType.PEASANT);
+						srvMsg = srv.sendCreate(UnitType.PEASANT);
 						action = true;
 					}
 				}else{
@@ -83,7 +85,7 @@ public class IACity implements IAInterface{
 						
 						if (tiles.size() != 0){
 							Tile t = getNearestToTile(tiles, nearestUnit.getTile());
-							srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
+							srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
 							action = true;
 						}
 					}
@@ -106,7 +108,7 @@ public class IACity implements IAInterface{
 							goal = getNearestToTile(tiles, enemyCity.getTile());
 						}
 						
-						srv.sendMove(myCity.getTile().getUnit().getId(), goal.getX(), goal.getY());
+						srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), goal.getX(), goal.getY());
 						action = true;
 					}
 				}else{
@@ -115,11 +117,11 @@ public class IACity implements IAInterface{
 							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5 - 1)
 									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < 3))
 										&& !engCreated){
-						srv.sendCreate(UnitType.ENGINEER);
+						srvMsg = srv.sendCreate(UnitType.ENGINEER);
 						engCreated = true;
 						action = true;
 					}else if (gold > 10 && pMe.countUnitByType(UnitType.PEASANT) < MAX_PEASANT){
-						srv.sendCreate(UnitType.PEASANT);
+						srvMsg = srv.sendCreate(UnitType.PEASANT);
 						createdPeasant++;
 						action = true;
 					}else{
@@ -132,12 +134,14 @@ public class IACity implements IAInterface{
 							r = (int)(Math.random() * leftUnits);
 						}
 						if (r != -1){
-							srv.sendCreate(units[r]);
+							srvMsg = srv.sendCreate(units[r]);
 							action = true;
 						}
 					}
 				}
 			}
+			if (!srvMsg)
+				break;
 		} while (action);
 	}
 	
