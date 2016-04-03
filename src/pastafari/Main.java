@@ -4,6 +4,7 @@ import ia.IAAstar;
 import ia.IADebile;
 import ia.IADeMerde;
 import ia.IAHumanDebug;
+import ia.IARenaud;
 import ia.IAtest;
 
 public class Main {
@@ -13,7 +14,7 @@ public class Main {
 		System.out.println("Hello");
 		//for(int i = 0; i < 2; i++)
 		{
-			new GameServer("127.0.0.1", 8080, new IADebile()/* new IAInterface() {
+			new GameServer("127.0.0.1", 8080, new IARenaud()/* new IAInterface() {
 				
 				@Override
 				public void makeTurn(GameServer srv) {

@@ -115,7 +115,7 @@ public class IACity implements IAInterface{
 				}else{
 					// sinon on dépense!
 					if (gold > 50 && 
-							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5 - 1)
+							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5)
 									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < 3))
 										&& !engCreated){
 						returnVal |= srvMsg = srv.sendCreate(UnitType.ENGINEER);
