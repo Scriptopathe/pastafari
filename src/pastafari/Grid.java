@@ -3,6 +3,7 @@ package pastafari;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
@@ -24,14 +25,14 @@ public class Grid {
 		return this.tiles[x][y];
 	}
 	
-	public City getCity()
+	public City getCity(int player)
 	{
 		for(int x = 0; x < size; x++)
 		{
 			for(int y = 0; y < size; y++)
 			{
 				Building b = tiles[x][y].getBuilding();
-				if(b != null && b.getType() == BuildingType.CITY)
+				if(b != null && b.getType() == BuildingType.CITY && tiles[x][y].getOwner().getId() == player)
 					return (City)b;
 					
 			}
@@ -147,7 +148,15 @@ public class Grid {
 		}
 	}
 	
-
+	/*public void getCost(List<Tile> path)
+	{
+		int cost = 0;
+		for(Tile t : path)
+		{
+			cost += t.get
+		}
+	}*/
+	
 	public static boolean canMove(boolean isEngineer, int action, Tile to) {
 		if(to.getUnitType() != UnitType.VOID) return false;
 		if(to.getType() == TileType.RIVER && !(isEngineer || to.getBuildingType() == BuildingType.BRIDGE)) return false;
