@@ -183,5 +183,26 @@ public class IACity implements IAInterface{
 
 	public void setMAX_PEASANT(int mAX_PEASANT) {
 		MAX_PEASANT = mAX_PEASANT;
-	}	
+	}
+	
+	public static int getDefBallistaID(GameState state){
+		Player p = state.getMyPlayer();
+		Player enemP = state.getOtherPlayer();
+		Tile cityTile = p.getCity().getTile();
+		Tile enemCity = enemP.getCity().getTile();
+		int minID = -1;
+		ArrayList<Unit> bList = (ArrayList<Unit>) p.getUnitsByType(UnitType.BALLISTA);
+		if (bList.size() > 0){
+			Unit tmpBallista = bList.get(0);
+			minID = tmpBallista.getId();
+			for (Unit b : p.getUnitsByType(UnitType.BALLISTA)){
+				if (Grid.getDistance(b.getTile(), cityTile) <= Grid.getDistance(tmpBallista.getTile(), cityTile)
+						&& Grid.getDistance(b.getTile(), enemCity) > Grid.getDistance(tmpBallista.getTile(), enemCity)){
+					b = tmpBallista;
+					minID = b.getId();
+				}
+			}
+		}
+		return minID;
+	}
 }

@@ -24,9 +24,14 @@ public class IAtest implements IAInterface {
 //		game.getGrid().display();
 		//srv.sendCommand(""); 
 		// move to attack
+		System.out.println("-- Explore ----------------");
 		moveExplore(game);
+		System.out.println("-- Army -------------------");
+		IAArmy army = new IAArmy();
+		army.makeTurn(srv);
 		
 		// buy&move units
+		System.out.println("-- City -------------------");
 		city.makeTurn(srv);
 		
 		srv.endTurn();
