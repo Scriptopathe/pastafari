@@ -33,7 +33,7 @@ public class IACity implements IAInterface{
 			// si une unité occupe la cité
 			if (myCity.getTile().getUnitType() != UnitType.VOID){
 				// si on peut bouger l'unité
-				int dest[] = myCity.leftPlace(state.getGrid());
+				int dest[] = myCity.leftPlace(state.getGrid().getNeighbors(myCity.getTile(), false), myCity.getTile().getUnit());
 				if (dest != null){
 					srv.sendMove(myCity.getTile().getUnit().getId(), dest[0], dest[1]);
 					action = true;

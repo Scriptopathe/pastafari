@@ -20,7 +20,7 @@ public class IAtest implements IAInterface {
 		this.srv = srv;
 		game = srv.getGameState();
 		game.getGrid().display();
-		//moveExplore(game);
+		moveExplore(game);
 		//srv.sendCommand(""); 
 		// move to attack
 		// buy&move units
@@ -35,6 +35,10 @@ public class IAtest implements IAInterface {
 		PriorityQueue<SortedPeasantMove> sorted = new PriorityQueue<>();
 		Player me = game.getMyPlayer();
 		for(Unit u : me.getUnits()) {
+			System.err.println("id is " + me.getId());
+			if (me.getId() == 1){
+				System.err.println(me.getUnits());
+			}
 			if(u.getType() == UnitType.PEASANT) {
 				int x = u.getTile().getX();
 				int y = u.getTile().getY();
