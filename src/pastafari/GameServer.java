@@ -134,6 +134,13 @@ public class GameServer extends Thread {
 	}
 	
 	public boolean sendMove(int id, int x, int y){
+		Unit u = null;
+		for(Unit i : state.getMyPlayer().getUnits())
+			if(i.getId() == id)
+				u = i;
+		if(u == null || !u.isAlive()) return false;
+		Tile t = state.getGrid().getTile(x, y);
+		if(t.getUnitType() != UnitType.VOID) return false;
 		return this.sendCommand("M," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
