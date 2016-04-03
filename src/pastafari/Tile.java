@@ -69,8 +69,23 @@ public class Tile {
 		return this.owner != null;
 	}
 	
+	
 	public String toString()
 	{
-		return "(" + this.x + ", " + this.y + ")";
+		return "(" + this.x + ", " + this.y + "@" + + this.hashCode() + ")" ;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Tile) {
+			Tile tile = (Tile)obj;
+			return this.getX() == tile.getX() && this.getY() == tile.getY(); 			
+		}
+		return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.x * 100 + this.y;
 	}
 }

@@ -101,9 +101,14 @@ public class GameServer extends Thread {
 		return this.sendCommand("M," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
+	public boolean sendDestroy(int id) {
+		return this.sendCommand("D," + Integer.toString(id));
+	}
+	
 	private boolean processResponse(String srvResponse)
 	{
 		updateState(srvResponse);
+		if(srvResponse.contains("ko")) System.exit(0);
 		return srvResponse.contains("ok");
 	}
 	
