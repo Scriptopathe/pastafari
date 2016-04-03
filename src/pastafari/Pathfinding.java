@@ -6,8 +6,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.PriorityQueue;
 import java.util.SortedSet;
+import java.util.Stack;
 
 import pastafari.structures.BuildingType;
+import pastafari.units.Unit;
+import pastafari.units.UnitType;
 
 public class Pathfinding 
 {
@@ -66,6 +69,60 @@ public class Pathfinding
 		return 1000;
 	}
 	
+	/**
+	 * Obtient la composante connexe accessible par l'unité donnée.
+	 * @param from
+	 * @return
+	 */
+	public List<Tile> GetCCL(Unit from)
+	{
+		List<Tile> tiles = new ArrayList<Tile>();
+		Stack<Tile> stack = new Stack<Tile>();
+		HashSet<Tile> closedSet = new HashSet<>();
+		stack.push(from.getTile());
+		while(!stack.isEmpty())
+		{
+			Tile t = stack.pop();
+			tiles.add(t);
+			
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(t, true))
+			{
+				if(closedSet.contains(neigh))
+					continue;
+				
+				if(neigh.getType() == TileType.RIVER)
+				{
+					if(from.getType() == UnitType.ENGINEER)
+					{
+						stack.push(neigh);
+						closedSet.add(neigh);
+					}
+				}
+				else if(neigh.getType() == TileType.MOUNTAIN)
+				{
+					if(from.getMaxAction() >= 4)
+					{
+						stack.push(neigh);
+						closedSet.add(neigh);
+					}
+				}
+				else {
+					stack.push(neigh);
+					closedSet.add(neigh);
+				}
+					
+			}
+		}
+		return tiles;
+	}
+	
+	/**
+	 * 
+	 * @param from
+	 * @param to
+	 * @param allowRiver
+	 * @return
+	 */
 	public List<Tile> FindPath(Tile from, Tile to, boolean allowRiver)
 	{
 		HashMap<Tile, Tile> cameFrom = new HashMap<>();
@@ -83,7 +140,7 @@ public class Pathfinding
 			
 			if(currentTile.equals(to)) break;
 			
-			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver)) {
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
 					closedSet.put(neigh, newCost);
