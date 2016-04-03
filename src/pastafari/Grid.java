@@ -147,15 +147,31 @@ public class Grid {
 			System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
 		}
 	}
+
 	
-	/*public void getCost(List<Tile> path)
+	/** Retourne le cout requis pour parcourir le chemin donné */
+	public static int getMoveCost(List<Tile> path)
 	{
 		int cost = 0;
 		for(Tile t : path)
 		{
-			cost += t.get
+			cost += getMoveCost(t, t);
 		}
-	}*/
+		return cost;
+	}
+	
+	public static int getMoveCost(Tile from, Tile to) {
+		if(Grid.getDistance(from, to) > 1) return Integer.MAX_VALUE;
+		if(to.getUnitType() != UnitType.VOID) return Integer.MAX_VALUE;
+		if(to.getType() == TileType.RIVER && !(from.getUnitType() == UnitType.ENGINEER || to.getBuildingType() == BuildingType.BRIDGE)) return Integer.MAX_VALUE;
+		
+		int cost = 2;
+		
+		if(to.getType() == TileType.MOUNTAIN) cost += 2;
+		if(to.getBuildingType() == BuildingType.ROAD) cost /= 2;
+		
+		return cost;
+	}
 	
 	public static boolean canMove(boolean isEngineer, int action, Tile to) {
 		if(to.getUnitType() != UnitType.VOID) return false;
