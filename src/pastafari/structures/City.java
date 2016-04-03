@@ -1,7 +1,10 @@
 package pastafari.structures;
 
+import java.util.ArrayList;
+
 import pastafari.Grid;
 import pastafari.Tile;
+import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
 public class City extends Building {
@@ -11,14 +14,10 @@ public class City extends Building {
 		super(tile, BUILD_COST, BuildingType.CITY);
 	}
 	
-	public int[] leftPlace(Grid g){
-		int x = this.getTile().getX(), y = this.getTile().getY();
-		for (int i = -1; i < 2; i++){
-			for (int j = -1; j < 2; j++){
-				if (!(i == 0 && j == 0) && x + i >= 0 && x + i < g.getSize() && y + j >= 0 && y + j < g.getSize()){
-					if (g.getTile(x + i, y + j).getUnitType() != UnitType.VOID)
-						return new int[]{x + i, y + j};
-				}
+	public int[] leftPlace(ArrayList<Tile> neighbors, Unit u){
+		for (Tile t : neighbors){
+			if (t.getUnitType() == UnitType.VOID && u.canMove(t)){
+				return new int[]{t.getX(), t.getY()};
 			}
 		}
 		return null;

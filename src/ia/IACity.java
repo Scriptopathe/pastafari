@@ -11,15 +11,16 @@ import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
 public class IACity implements IAInterface{
-
+	
+	public int MAX_PEASANT;
+	public int createdPeasant;
+	
 	@Override
 	public void makeTurn(GameServer srv) {
 		GameState state = srv.getGameState();
 		Player pMe = state.getMyPlayer();
 		boolean action;
 		City city = pMe.getCity();
-		int cityX = city.getTile().getX();
-		int cityY = city.getTile().getY();
 		
 		do{
 			// on suppose qu'on a fait aucune action
@@ -33,7 +34,7 @@ public class IACity implements IAInterface{
 			// si une unité occupe la cité
 			if (myCity.getTile().getUnitType() != UnitType.VOID){
 				// si on peut bouger l'unité
-				int dest[] = myCity.leftPlace(state.getGrid());
+				int dest[] = myCity.leftPlace(state.getGrid().getNeighbors(myCity.getTile(), false), myCity.getTile().getUnit());
 				if (dest != null){
 					srv.sendMove(myCity.getTile().getUnit().getId(), dest[0], dest[1]);
 					action = true;
@@ -41,11 +42,19 @@ public class IACity implements IAInterface{
 			}else{
 				// sinon on dépense!
 				int gold = pMe.getGold();
-				if (gold >= 10){
+				if (gold >= 50){
+					srv.sendCreate(UnitType.ENGINEER);
+				}else if (gold >= 10){
 					srv.sendCreate(UnitType.PEASANT);
 					action = true;
 				}
 			}
 		} while (action);
 	}
+	
+	public static int truc(){
+		return 3;
+	}
+	
+	
 }
