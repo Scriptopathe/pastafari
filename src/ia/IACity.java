@@ -32,28 +32,33 @@ public class IACity implements IAInterface{
 			City myCity = pMe.getCity();
 			
 			// si une unité occupe la cité
-			if (myCity.getTile().getUnitType() != UnitType.VOID){
+			if (myCity.getTile().getUnitType() != UnitType.VOID && myCity.getTile().getUnit().getCurrentAction() != 0){
 				// si on peut bouger l'unité
-				int dest[] = myCity.leftPlace(state.getGrid().getNeighbors(myCity.getTile(), false), myCity.getTile().getUnit());
-				if (dest != null){
-					srv.sendMove(myCity.getTile().getUnit().getId(), dest[0], dest[1]);
+				ArrayList<Tile> tiles = state.getGrid().getFreeNeighbors(myCity.getTile(), false, false);
+				
+				if (tiles.size() != 0){
+					Tile t = tiles.get(0);
+					srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
 					action = true;
 				}
 			}else{
 				// sinon on dépense!
 				int gold = pMe.getGold();
-				if (gold >= 50){
+				if (gold > 50 && pMe.countEngineer() == 0 ){
 					srv.sendCreate(UnitType.ENGINEER);
-				}else if (gold >= 10){
+					action = true;
+				}else if (gold > 10 && createdPeasant < MAX_PEASANT){
 					srv.sendCreate(UnitType.PEASANT);
+					createdPeasant++;
 					action = true;
 				}
 			}
 		} while (action);
 	}
 	
-	public static int truc(){
-		return 3;
+	public IACity(int maxPeasants){
+		MAX_PEASANT = maxPeasants;
+		createdPeasant = 0;
 	}
 	
 	
