@@ -30,7 +30,7 @@ public class IAtest implements IAInterface {
 	}
 	
 	public void moveExplore(GameState game) {
-		double mat[][] = game.getGrid().getPeasantMatrice();
+		double mat[][] = game.getGrid().getMatrice(2);
 		
 		PriorityQueue<SortedPeasantMove> sorted = new PriorityQueue<>();
 		Player me = game.getMyPlayer();
