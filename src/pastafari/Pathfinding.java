@@ -71,19 +71,19 @@ public class Pathfinding
 	
 	public List<Tile> GetCCL(Unit from)
 	{
-		return GetCCL(from, true, true);
+		return GetCCL(from.getTile(), from.getType(), true, true);
 	}
 	/**
 	 * Obtient la composante connexe accessible par l'unité donnée.
 	 * @param from
 	 * @return
 	 */
-	public List<Tile> GetCCL(Unit from, boolean allowRiver, boolean ignoreEnnemy)
+	public List<Tile> GetCCL(Tile from, UnitType unitType, boolean allowRiver, boolean ignoreEnnemy)
 	{
 		List<Tile> tiles = new ArrayList<Tile>();
 		Stack<Tile> stack = new Stack<Tile>();
 		HashSet<Tile> closedSet = new HashSet<>();
-		stack.push(from.getTile());
+		stack.push(from);
 		while(!stack.isEmpty())
 		{
 			Tile t = stack.pop();
@@ -96,7 +96,7 @@ public class Pathfinding
 				
 				if(neigh.getType() == TileType.RIVER)
 				{
-					if(from.getType() == UnitType.ENGINEER)
+					if(unitType == UnitType.ENGINEER)
 					{
 						stack.push(neigh);
 						closedSet.add(neigh);
@@ -104,7 +104,7 @@ public class Pathfinding
 				}
 				else if(neigh.getType() == TileType.MOUNTAIN)
 				{
-					if(from.getMaxAction() >= 4)
+					if(unitType == UnitType.DWARF || unitType == UnitType.PEASANT || unitType == UnitType.BALLISTA)
 					{
 						stack.push(neigh);
 						closedSet.add(neigh);
