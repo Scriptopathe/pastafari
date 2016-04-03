@@ -20,7 +20,7 @@ public class IADebile implements IAInterface {
 	}
 	
 	State state = State.Farming;
-	IACity city = new IACity(8);
+	IACity city = new IACity();
 	IAtest test = new IAtest();
 	@Override
 	public void makeTurn(GameServer srv) 
@@ -29,7 +29,7 @@ public class IADebile implements IAInterface {
 		// Gestion des paysants.
 		if(state == State.Farming)
 		{
-			if(srv.getGameState().getMyPlayer().countPeasant() < 8)
+			if(srv.getGameState().getMyPlayer().countUnitByType(UnitType.PEASANT) < 8)
 			{
 				test.srv = srv;
 				test.game = srv.getGameState();
@@ -68,7 +68,7 @@ public class IADebile implements IAInterface {
 				}
 			}
 			
-			// on regarde l'état updaté des ingés
+			// on regarde l'ï¿½tat updatï¿½ des ingï¿½s
 			engineers = srv.getGameState().getMyPlayer().getUnitsByType(UnitType.ENGINEER);
 			for(Unit eng : engineers)
 			{
