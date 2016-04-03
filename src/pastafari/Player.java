@@ -1,6 +1,7 @@
 package pastafari;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import pastafari.structures.City;
 import pastafari.units.Unit;
@@ -128,6 +129,17 @@ public class Player {
 				count++;
 		}
 		return count;
+	}
+	
+	public List<Unit> getUnitsByType(UnitType type)
+	{
+		List<Unit> units = new ArrayList<>();
+		for(Unit u : this.units)
+		{
+			if(u.getType() == type)
+				units.add(u);
+		}
+		return units;
 	}
 	
 	public void setCity(City c) {
