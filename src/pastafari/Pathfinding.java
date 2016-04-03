@@ -74,7 +74,7 @@ public class Pathfinding
 		return GetCCL(from.getTile(), from.getType(), true, true);
 	}
 	/**
-	 * Obtient la composante connexe accessible par l'unité donnée.
+	 * Obtient la composante connexe accessible par l'unitï¿½ donnï¿½e.
 	 * @param from
 	 * @return
 	 */
@@ -122,7 +122,7 @@ public class Pathfinding
 	
 	/**
 	 * Retourne la position d'attaque optimale de ally vers ennemy.
-	 * Si aucune position d'attaque n'est trouvée, retourne null.
+	 * Si aucune position d'attaque n'est trouvï¿½e, retourne null.
 	 * @param ally
 	 * @param ennemy
 	 * @return
@@ -170,13 +170,14 @@ public class Pathfinding
 		while(!openset.isEmpty()) {
 			Label currentTile = openset.poll();
 			
-			if(currentTile.equals(to))
+			if(currentTile.tile.equals(to))
 			{
 				found = true;
 				break;
 			}
 			
 			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, ignoreEnnemy)) {
+
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
 					closedSet.put(neigh, newCost);
@@ -191,13 +192,12 @@ public class Pathfinding
 		
 		
 		List<Tile> tiles = new ArrayList<>();
-		
 		if(found)
 		{
 			Tile current = to;
-			while(current != from)
+			while(!current.equals(from))
 			{
-				tiles.add(current);
+				tiles.add(0, current);
 				current = cameFrom.get(current);
 			}
 		}

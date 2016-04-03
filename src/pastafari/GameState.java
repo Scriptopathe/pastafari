@@ -38,4 +38,8 @@ public class GameState {
 	public int getMyId() {
 		return myId;
 	}
+	
+	public int getEnnemyId() {
+		return myId == 1 ? 0 : 1;
+	}
 }
