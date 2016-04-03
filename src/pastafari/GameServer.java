@@ -108,7 +108,7 @@ public class GameServer extends Thread {
 	private boolean processResponse(String srvResponse)
 	{
 		updateState(srvResponse);
-		if(srvResponse.contains("ko")) System.exit(0);
+//		if(srvResponse.contains("ko")) System.exit(0);
 		return srvResponse.contains("ok");
 	}
 	
@@ -177,6 +177,9 @@ public class GameServer extends Thread {
 		}
 		catch(RuntimeException e)
 		{
+			e.printStackTrace();
+		}
+		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
