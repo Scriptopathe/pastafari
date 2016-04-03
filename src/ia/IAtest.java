@@ -57,7 +57,7 @@ public class IAtest implements IAInterface {
 			SortedPeasantMove spm = sorted.poll();
 			if(done.add(spm.p.getId()) && Grid.canMove(false, spm.p.getCurrentAction(), game.getGrid().getTile(spm.dx, spm.dy))) {
 				srv.sendMove(spm.p.getId(), spm.dx, spm.dy);
-				//srv.sendCommand("M,"+spm.p.getId()+","+spm.dx+","+spm.dy);
+				game.getGrid().display();
 			}
 		}
 	}

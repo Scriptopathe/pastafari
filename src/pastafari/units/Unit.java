@@ -1,5 +1,8 @@
 package pastafari.units;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import pastafari.Grid;
 import pastafari.Player;
 import pastafari.Tile;
@@ -35,26 +38,31 @@ public abstract class Unit {
 		this.id = id;
 		this.type = type;
 	}
-	
-	public int getMoveCost(Tile to) {
-		if(Grid.getDistance(this.tile, to) > 1) return Integer.MAX_VALUE;
-		if(to.getUnitType() != UnitType.VOID) return Integer.MAX_VALUE;
-		if(to.getType() == TileType.RIVER && !(this.type == UnitType.ENGINEER || to.getBuildingType() == BuildingType.BRIDGE)) return Integer.MAX_VALUE;
-		
-		int cost = 2;
-		
-		if(to.getType() == TileType.MOUNTAIN) cost += 2;
-		if(to.getBuildingType() == BuildingType.ROAD) cost /= 2;
-		
-		return cost;
-	}
+
 	
 	public boolean canMove(Tile to) {	
-		return getMoveCost(to) <= this.currentAction;
+		return Grid.getMoveCost(this.tile, to) <= this.currentAction;
 	}
 	
+	/** Retourne le chemin maximal pouvant être effectué par cette unité. */
+	public List<Tile> getMaxMove(List<Tile> path)
+	{
+		int cost = 0;
+		List<Tile> maxPath = new ArrayList<Tile>();
+		for(Tile t : path)
+		{
+			cost += Grid.getMoveCost(t, t);
+			if(cost <= this.currentAction)
+				maxPath.add(t);
+			else
+				break;
+		}
+		return maxPath;
+	}
+	
+	/** Déplace une unité vers une case adjacente, si c'est possible */
 	public void moveTo(Tile to) {
-		int cost = this.getMoveCost(to);
+		int cost = Grid.getMoveCost(this.tile, to);
 		if(cost <= this.currentAction) {
 			this.tile.setUnit(null);
 			to.setUnit(this);

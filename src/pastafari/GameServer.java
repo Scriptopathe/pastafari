@@ -274,7 +274,7 @@ public class GameServer extends Thread {
 			String goldStr = units[units.length-1].replace(";", "").replace(":", "").replace("$", "");
 			
 			state.getPlayer(playerId).setGold(Integer.parseInt(goldStr));
-			state.getPlayer(playerId).setCity(state.getGrid().getCity());
+			state.getPlayer(playerId).setCity(state.getGrid().getCity(playerId));
 		}
 		
 		this.state = state;

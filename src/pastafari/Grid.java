@@ -3,6 +3,7 @@ package pastafari;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
@@ -24,14 +25,14 @@ public class Grid {
 		return this.tiles[x][y];
 	}
 	
-	public City getCity()
+	public City getCity(int player)
 	{
 		for(int x = 0; x < size; x++)
 		{
 			for(int y = 0; y < size; y++)
 			{
 				Building b = tiles[x][y].getBuilding();
-				if(b != null && b.getType() == BuildingType.CITY)
+				if(b != null && b.getType() == BuildingType.CITY && tiles[x][y].getOwner().getId() == player)
 					return (City)b;
 					
 			}
@@ -61,6 +62,20 @@ public class Grid {
 			}
 		}
 		return neighs;
+	}
+	
+	public ArrayList<Tile> getFreeNeighbors(Tile tile, boolean allowRiver) {
+		ArrayList<Tile> neighs = new ArrayList<>();
+		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
+			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
+				if(i == tile.getX() && j == tile.getY()) continue;
+				Tile t = this.tiles[i][j];
+				if(t.getUnitType() == UnitType.VOID && ((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER)) {
+					neighs.add(t);
+				}
+			}
+		}
+		return neighs;	
 	}
 	
 	public static int getDistance(Tile from, Tile to) {
@@ -132,8 +147,32 @@ public class Grid {
 			System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
 		}
 	}
-	
 
+	
+	/** Retourne le cout requis pour parcourir le chemin donné */
+	public static int getMoveCost(List<Tile> path)
+	{
+		int cost = 0;
+		for(Tile t : path)
+		{
+			cost += getMoveCost(t, t);
+		}
+		return cost;
+	}
+	
+	public static int getMoveCost(Tile from, Tile to) {
+		if(Grid.getDistance(from, to) > 1) return Integer.MAX_VALUE;
+		if(to.getUnitType() != UnitType.VOID) return Integer.MAX_VALUE;
+		if(to.getType() == TileType.RIVER && !(from.getUnitType() == UnitType.ENGINEER || to.getBuildingType() == BuildingType.BRIDGE)) return Integer.MAX_VALUE;
+		
+		int cost = 2;
+		
+		if(to.getType() == TileType.MOUNTAIN) cost += 2;
+		if(to.getBuildingType() == BuildingType.ROAD) cost /= 2;
+		
+		return cost;
+	}
+	
 	public static boolean canMove(boolean isEngineer, int action, Tile to) {
 		if(to.getUnitType() != UnitType.VOID) return false;
 		if(to.getType() == TileType.RIVER && !(isEngineer || to.getBuildingType() == BuildingType.BRIDGE)) return false;
