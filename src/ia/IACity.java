@@ -183,5 +183,10 @@ public class IACity implements IAInterface{
 
 	public void setMAX_PEASANT(int mAX_PEASANT) {
 		MAX_PEASANT = mAX_PEASANT;
-	}	
+	}
+	
+	public static int getDefBallistaID(GameState state){
+		Player p = state.getMyPlayer();
+		//for (Unit b : p)
+	}
 }
