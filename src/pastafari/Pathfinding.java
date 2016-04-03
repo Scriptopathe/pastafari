@@ -205,6 +205,82 @@ public class Pathfinding
 		
 		return tiles;
 	}
+	
+	
+	double getEuclidianDst(Tile t1, Tile t2)
+	{
+		return Math.sqrt(t1.getX()*t2.getX() + t1.getY()*t2.getY());
+	}
+	
+	/**
+	 * Coût heuristique bizarre mais cool il parait.
+	 */
+	public int getChelouHeuristicCost(Tile t1, Tile src, Tile t2)
+	{
+		int a = t1.getY() - t2.getY();
+		int b = t2.getX() - t1.getX();
+		int c = t1.getX()*t2.getY() - t2.getX()*t2.getY();
+		double dist = (Math.abs(a*src.getX() + b*src.getY() + c) / Math.sqrt(a*a + b*b));
+		double percent = getEuclidianDst(src, t2) / getEuclidianDst(t1, t2);
+		dist = 10*Math.max(0, percent*(5 - dist));
+		return (int)dist + Grid.getDistance(src, t2) * 1;
+	}
+	
+	/**
+	 * Version modifiée de l'A* avec une heuristique bizarre.
+	 * @return
+	 */
+	public List<Tile> FindPathForPGG(Tile from, Tile to, boolean allowRiver, boolean ignoreEnnemy)
+	{
+		HashMap<Tile, Tile> cameFrom = new HashMap<>();
+		PriorityQueue<Label> openset = new PriorityQueue<>();
+		HashMap<Tile, Integer> closedSet = new HashMap<>();
+		boolean found = false;
+		Label f = new Label(from);
+		f.heuristicCost = getHeuristicCost(from, to);
+		openset.add(f);
+		
+		closedSet.put(from, 0);
+		cameFrom.put(from, null);
+		while(!openset.isEmpty()) {
+			Label currentTile = openset.poll();
+			
+			if(currentTile.tile.equals(to))
+			{
+				found = true;
+				break;
+			}
+			
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, ignoreEnnemy)) {
+
+				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
+				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
+					closedSet.put(neigh, newCost);
+					Label label = new Label(neigh);
+					label.heuristicCost = getChelouHeuristicCost(from, to, neigh);
+					label.pathCost = newCost;
+					openset.add(label);
+					cameFrom.put(neigh, currentTile.tile);
+				}
+			}
+		}
+		
+		
+		List<Tile> tiles = new ArrayList<>();
+		if(found)
+		{
+			Tile current = to;
+			while(!current.equals(from))
+			{
+				tiles.add(0, current);
+				current = cameFrom.get(current);
+			}
+		}
+
+		
+		return tiles;
+	}
+	
 	/**
 	 * Trouve un chemin réellement faisable.
 	 * @param from

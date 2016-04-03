@@ -97,7 +97,7 @@ public class IAArmy implements IAInterface {
 		Pathfinding p = new Pathfinding(srv);
 		for(Unit u : me.getUnits())
 		if(u.getCurrentAction() > 0 && u.isAlive()) {
-			ArrayList<Tile> path = (ArrayList<Tile>) p.FindPath(u.getTile(), game.getPlayer(1-game.getMyPlayer().getId()).getCity().getTile(), u.getType() == UnitType.ENGINEER, true);
+			ArrayList<Tile> path = (ArrayList<Tile>) p.FindPathForPGG(u.getTile(), game.getPlayer(1-game.getMyPlayer().getId()).getCity().getTile(), u.getType() == UnitType.ENGINEER, true);
 			if(path.size() > 0) {
 				sortedDest.add(new MoveToCity(u, path, game.getMyPlayer().getCity().getTile(), game.getPlayer(1-game.getMyPlayer().getId()).getCity().getTile()));
 			}

@@ -15,7 +15,7 @@ import pastafari.structures.City;
 import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
-public class IADebile implements IAInterface {
+public class IAPeteLesInges implements IAInterface {
 
 	enum State
 	{
@@ -37,10 +37,8 @@ public class IADebile implements IAInterface {
 	IACity city = new IACity(true);
 	IAtest test = new IAtest();
 	@Override
-	public boolean makeTurn(GameServer srv) 
+	public void makeTurn(GameServer srv) 
 	{
-		boolean returnVal = false;
-		
 		city.setMAX_PEASANT(8);
 		GameState gs = srv.getGameState();
 
@@ -74,15 +72,13 @@ public class IADebile implements IAInterface {
 		}
 		
 		try {
-			Thread.sleep(0*500);
+			Thread.sleep(1*800);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		srv.endTurn();
-		
-		return false;
 	}
 	
 	void moveArmy(GameServer srv)
@@ -96,59 +92,14 @@ public class IADebile implements IAInterface {
 		srv.log("MOVE ARMY !! COUNT = " + attaquants.size());
 		for(Unit atq : attaquants)
 		{
-			AttackState s = findEnnemy(atq, srv);
-			if(s == null)
-				continue;
 			
-			List<Tile> path = p.FindBestPath(atq.getTile(), s.position, true);
-			boolean pathDone = true;
-			for(Tile t : path)
-			{
-				if(!srv.sendMove(atq.getId(), t.getX(), t.getY()))
-				{
-					pathDone = false;
-					break;
-				}
-			}
-			
-			// Si on est arrivï¿½
-			Unit updatedTarget = srv.getGameState().getOtherPlayer().getUnitById(s.target.getId());
-			if(updatedTarget != null && updatedTarget.isAlive())
-			{
-				if(pathDone && srv.getGameState().getMyPlayer().getUnitById(atq.getId()).getCurrentAction() >= 2)
-				{
-					srv.log("updated target = " + updatedTarget == null ? "null" : updatedTarget.isAlive() + " . " + updatedTarget.getCurrentHP());
-					srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getY());
-				}
-			}
 		}
 	}
 	
-	AttackState findEnnemy(Unit from, GameServer srv)
+	/*Unit findEnnemyInRange(Unit from, GameServer srv)
 	{
-		Pathfinding p = new Pathfinding(srv);
-		List<Tile> accessible = p.GetCCL(from.getTile(), from.getType(), true, false);
-		List<Unit> ennemies = srv.getGameState().getOtherPlayer().getUnits();
-		AttackState as = null;
-		int minDistance = Integer.MAX_VALUE;
-		for(Unit u : ennemies)
-		{
-			for(Tile tile : accessible)
-			{
-				int distance = Grid.getDistance(u.getTile(), tile);
-				if(distance < minDistance) // distance < u.getRange() && 
-				{
-					minDistance = distance;
-					as = new AttackState();
-					as.position = tile;
-					as.target = u;
-				}
-			}
-		}
-
-		srv.log("Accessible count = " + accessible.size() + "; Target = " + as);
-		return as;
-	}
+		
+	}*/
 	
 	void moveEngineers(GameServer srv)
 	{
@@ -174,7 +125,7 @@ public class IADebile implements IAInterface {
 			}
 		}
 		
-		// on regarde l'ï¿½tat updatï¿½ des ingï¿½s
+		// on regarde l'état updaté des ingés
 		engineers = srv.getGameState().getMyPlayer().getUnitsByType(UnitType.ENGINEER);
 		for(Unit eng : engineers)
 		{
