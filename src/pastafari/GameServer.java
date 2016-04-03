@@ -108,7 +108,6 @@ public class GameServer extends Thread {
 	private boolean processResponse(String srvResponse)
 	{
 		updateState(srvResponse);
-		if(srvResponse.contains("ko")) System.exit(0);
 		return srvResponse.contains("ok");
 	}
 	

@@ -146,6 +146,16 @@ public class Player {
 		return units;
 	}
 	
+	public Unit getUnitById(int id)
+	{
+		for(Unit u : this.units)
+		{
+			if(u.getId() == id)
+				return u;
+		}
+		return null;
+	}
+	
 	public void setCity(City c) {
 		city = c;
 	}
