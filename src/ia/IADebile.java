@@ -20,7 +20,7 @@ public class IADebile implements IAInterface {
 	}
 	
 	State state = State.Farming;
-	IACity city = new IACity();
+	IACity city = new IACity(true);
 	IAtest test = new IAtest();
 	@Override
 	public void makeTurn(GameServer srv) 

@@ -15,7 +15,7 @@ import pastafari.units.UnitType;
 public class IAtest implements IAInterface {
 	GameState game;
 	GameServer srv;
-	IACity city = new IACity();
+	IACity city = new IACity(false);
 	
 	@Override
 	public void makeTurn(GameServer srv) {
