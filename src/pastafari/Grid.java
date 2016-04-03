@@ -49,7 +49,13 @@ public class Grid {
 		this.tiles[x][y] = tile;
 	}
 
-	
+	/**
+	 * Obtient la liste des voisins du tile potentiellement accessibles pouvant contenir
+	 * une unité.
+	 * @param tile
+	 * @param allowRiver
+	 * @return
+	 */
 	public ArrayList<Tile> getNeighbors(Tile tile, boolean allowRiver) {
 		ArrayList<Tile> neighs = new ArrayList<>();
 		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
@@ -64,6 +70,13 @@ public class Grid {
 		return neighs;
 	}
 	
+	/** 
+	 * Obtient les voisins qui sont réellement accessibles.
+	 * N'autorise pas les voisins avec unité.
+	 * @param tile
+	 * @param allowRiver
+	 * @return
+	 */
 	public ArrayList<Tile> getFreeNeighbors(Tile tile, boolean allowRiver, boolean ignoreEnnemy) {
 		ArrayList<Tile> neighs = new ArrayList<>();
 		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
