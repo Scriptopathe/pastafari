@@ -20,11 +20,12 @@ public class IADebile implements IAInterface {
 	}
 	
 	State state = State.Farming;
-	IACity city = new IACity(8);
+	IACity city = new IACity();
 	IAtest test = new IAtest();
 	@Override
 	public void makeTurn(GameServer srv) 
 	{
+		city.setMAX_PEASANT(8);
 		test.moveExplore(srv.getGameState());
 		// Gestion des paysants.
 		if(state == State.Farming)
