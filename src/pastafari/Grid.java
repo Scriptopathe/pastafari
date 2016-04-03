@@ -37,7 +37,7 @@ public class Grid {
 					
 			}
 		}
-		System.out.println("Grid.getCity(): no city found !!");
+		// System.out.println("Grid.getCity(): no city found !!");
 		return null;
 	}
 	
