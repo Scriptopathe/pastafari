@@ -69,17 +69,21 @@ public class Pathfinding
 		return 1000;
 	}
 	
+	public List<Tile> GetCCL(Unit from)
+	{
+		return GetCCL(from.getTile(), from.getType(), true, true);
+	}
 	/**
 	 * Obtient la composante connexe accessible par l'unité donnée.
 	 * @param from
 	 * @return
 	 */
-	public List<Tile> GetCCL(Unit from)
+	public List<Tile> GetCCL(Tile from, UnitType unitType, boolean allowRiver, boolean ignoreEnnemy)
 	{
 		List<Tile> tiles = new ArrayList<Tile>();
 		Stack<Tile> stack = new Stack<Tile>();
 		HashSet<Tile> closedSet = new HashSet<>();
-		stack.push(from.getTile());
+		stack.push(from);
 		while(!stack.isEmpty())
 		{
 			Tile t = stack.pop();
@@ -92,7 +96,7 @@ public class Pathfinding
 				
 				if(neigh.getType() == TileType.RIVER)
 				{
-					if(from.getType() == UnitType.ENGINEER)
+					if(unitType == UnitType.ENGINEER)
 					{
 						stack.push(neigh);
 						closedSet.add(neigh);
@@ -100,7 +104,7 @@ public class Pathfinding
 				}
 				else if(neigh.getType() == TileType.MOUNTAIN)
 				{
-					if(from.getMaxAction() >= 4)
+					if(unitType == UnitType.DWARF || unitType == UnitType.PEASANT || unitType == UnitType.BALLISTA)
 					{
 						stack.push(neigh);
 						closedSet.add(neigh);
@@ -114,6 +118,34 @@ public class Pathfinding
 			}
 		}
 		return tiles;
+	}
+	
+	/**
+	 * Retourne la position d'attaque optimale de ally vers ennemy.
+	 * Si aucune position d'attaque n'est trouvée, retourne null.
+	 * @param ally
+	 * @param ennemy
+	 * @return
+	 */
+	public Tile getAttackPosition(Unit ally, Unit ennemy, boolean allowRiver, boolean ignoreEnnemy)
+	{
+		List<Tile> ccl = GetCCL(ally);
+		List<Tile> path;
+		Tile tile = null;
+		int actionCost = Integer.MAX_VALUE;
+		for(Tile t : ccl)
+		{
+			List<Tile> p = FindPath(ally.getTile(), ennemy.getTile(), allowRiver, ignoreEnnemy);
+			int cost = Grid.getMoveCost(p);
+			if(cost < actionCost && Grid.getDistance(p.get(p.size() - 1), ennemy.getTile()) < ally.getRange())
+			{
+				actionCost = cost;
+				path = p;
+				tile = t;
+			}
+		}
+		
+		return tile;
 	}
 	
 	/**
