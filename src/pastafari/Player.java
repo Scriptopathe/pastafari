@@ -130,7 +130,11 @@ public class Player {
 		}
 		return count;
 	}
-	
+	/*
+	public int countUnitByType(UnitType type){
+		int result = 0;
+	}
+	*/
 	public List<Unit> getUnitsByType(UnitType type)
 	{
 		List<Unit> units = new ArrayList<>();
