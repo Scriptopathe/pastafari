@@ -123,12 +123,12 @@ public class Pathfinding
 	 * @param allowRiver
 	 * @return
 	 */
-	public List<Tile> FindPath(Tile from, Tile to, boolean allowRiver)
+	public List<Tile> FindPath(Tile from, Tile to, boolean allowRiver, boolean ignoreEnnemy)
 	{
 		HashMap<Tile, Tile> cameFrom = new HashMap<>();
 		PriorityQueue<Label> openset = new PriorityQueue<>();
 		HashMap<Tile, Integer> closedSet = new HashMap<>();
-		
+		boolean found = false;
 		Label f = new Label(from);
 		f.heuristicCost = getHeuristicCost(from, to);
 		openset.add(f);
@@ -138,9 +138,13 @@ public class Pathfinding
 		while(!openset.isEmpty()) {
 			Label currentTile = openset.poll();
 			
-			if(currentTile.equals(to)) break;
+			if(currentTile.equals(to))
+			{
+				found = true;
+				break;
+			}
 			
-			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, false)) {
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, ignoreEnnemy)) {
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
 					closedSet.put(neigh, newCost);
@@ -155,12 +159,17 @@ public class Pathfinding
 		
 		
 		List<Tile> tiles = new ArrayList<>();
-		Tile current = to;
-		while(current != from)
+		
+		if(found)
 		{
-			tiles.add(current);
-			current = cameFrom.get(current);
+			Tile current = to;
+			while(current != from)
+			{
+				tiles.add(current);
+				current = cameFrom.get(current);
+			}
 		}
+
 		
 		return tiles;
 	}
