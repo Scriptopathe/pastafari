@@ -36,16 +36,16 @@ public class IAArmy implements IAInterface {
 				}
 				else if(u.getTile().getBuildingType() != BuildingType.BRIDGE && u.getTile().getType() == TileType.RIVER) {// If on river: make bridge
 					if(u.getTile().getBuildingType() != BuildingType.VOID)
-						returnVal = srv.sendDestroy(u.getId());
-					returnVal = srv.sendBuild(u.getId(), BuildingType.BRIDGE);
+						returnVal |= srv.sendDestroy(u.getId());
+					returnVal |= srv.sendBuild(u.getId(), BuildingType.BRIDGE);
 				}
 				else if(u.getTile().getBuildingType() != BuildingType.ROAD && u.getTile().getType() == TileType.MOUNTAIN) {
 					if(u.getTile().getBuildingType() != BuildingType.VOID)
-						returnVal = srv.sendDestroy(u.getId());
-					returnVal = srv.sendBuild(u.getId(), BuildingType.ROAD);
+						returnVal |= srv.sendDestroy(u.getId());
+					returnVal |= srv.sendBuild(u.getId(), BuildingType.ROAD);
 				}
 				else if(u.getTile().getBuildingType() == BuildingType.CITY) {
-					returnVal = srv.sendDestroy(u.getId());
+					returnVal |= srv.sendDestroy(u.getId());
 				}
 				else {
 					attackInRange(u, game.getGrid(), sortedTarget);
@@ -53,23 +53,23 @@ public class IAArmy implements IAInterface {
 			}else{
 				Tile myCityTile = game.getMyPlayer().getCity().getTile();
 				if (Grid.getDistance(myCityTile, eng.getTile()) == 1 && myCityTile.getBuildingType() == BuildingType.VOID && myCityTile.getType() != TileType.RIVER){
-					returnVal = srv.sendBuild(eng.getId(), BuildingType.HOSPITAL);
+					returnVal |= srv.sendBuild(eng.getId(), BuildingType.HOSPITAL);
 				}else{
 					if(u.getTile().getBuilding() == me.getCity()) {
 						attackInRange(u, game.getGrid(), sortedTarget);
 					}
 					else if(u.getTile().getBuildingType() != BuildingType.BRIDGE && u.getTile().getType() == TileType.RIVER) {// If on river: make bridge
 						if(u.getTile().getBuildingType() != BuildingType.VOID)
-							returnVal = srv.sendDestroy(u.getId());
-						returnVal = srv.sendBuild(u.getId(), BuildingType.BRIDGE);
+							returnVal |= srv.sendDestroy(u.getId());
+						returnVal |= srv.sendBuild(u.getId(), BuildingType.BRIDGE);
 					}
 					else if(u.getTile().getBuildingType() != BuildingType.ROAD && u.getTile().getType() == TileType.MOUNTAIN) {
 						if(u.getTile().getBuildingType() != BuildingType.VOID)
-							returnVal = srv.sendDestroy(u.getId());
-						returnVal = srv.sendBuild(u.getId(), BuildingType.ROAD);
+							returnVal |= srv.sendDestroy(u.getId());
+						returnVal |= srv.sendBuild(u.getId(), BuildingType.ROAD);
 					}
 					else if(u.getTile().getBuildingType() == BuildingType.CITY) {
-						returnVal = srv.sendDestroy(u.getId());
+						returnVal |= srv.sendDestroy(u.getId());
 					}
 					else {
 						attackInRange(u, game.getGrid(), sortedTarget);
@@ -87,7 +87,7 @@ public class IAArmy implements IAInterface {
 			if(t.hunter.getCurrentAction() < 2) continue;
 			if(!t.target.isAlive()) continue;
 			
-			returnVal = srv.sendAttack(t.hunter.getId(), t.target.getTile().getX(), t.target.getTile().getY());
+			returnVal |= srv.sendAttack(t.hunter.getId(), t.target.getTile().getX(), t.target.getTile().getY());
 		}
 		
 		game = srv.getGameState();
@@ -107,7 +107,7 @@ public class IAArmy implements IAInterface {
 			MoveToCity m = sortedDest.poll();
 			if(!m.u.isAlive()) continue;
 			if(!Grid.canMove(m.u.getType()==UnitType.ENGINEER, m.u.getCurrentAction(), m.path.get(0))) continue;
-			returnVal = srv.sendMove(m.u.getId(), m.path.get(0).getX(), m.path.get(0).getY());
+			returnVal |= srv.sendMove(m.u.getId(), m.path.get(0).getX(), m.path.get(0).getY());
 		}
 		
 		return returnVal;
