@@ -2,7 +2,6 @@ package ia;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Stream;
 
 import pastafari.GameServer;
 import pastafari.GameState;
@@ -127,7 +126,7 @@ public class IAPeteLesInges implements IAInterface {
 			}
 		}
 		
-		// on regarde l'état updaté des ingés
+		// on regarde l'ï¿½tat updatï¿½ des ingï¿½s
 		engineers = srv.getGameState().getMyPlayer().getUnitsByType(UnitType.ENGINEER);
 		for(Unit eng : engineers)
 		{

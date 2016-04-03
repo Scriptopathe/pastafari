@@ -140,7 +140,7 @@ public class Grid {
 	}
 	
 	public void display() {
-		System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
+//		System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
 
 		for(int i = 0; i < this.size; i++) {
 			StringBuilder buffer = new StringBuilder();
@@ -157,7 +157,7 @@ public class Grid {
 				buffer.append(tile.getType().toString().charAt(0)); buffer.append("|");
 			}
 			System.out.println(buffer.toString());
-			System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
+//			System.out.println(String.join("", Collections.nCopies(this.size * 15, "-")));
 		}
 	}
 
