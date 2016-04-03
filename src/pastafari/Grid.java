@@ -168,7 +168,11 @@ public class Grid {
 		int cost = 0;
 		for(Tile t : path)
 		{
-			cost += getMoveCost(t, t);
+			int c = getMoveCost(t, t);
+			if(c == Integer.MAX_VALUE)
+				return c;
+			
+			cost += c;
 		}
 		return cost;
 	}
