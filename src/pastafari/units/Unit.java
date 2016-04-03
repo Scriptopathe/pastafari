@@ -8,6 +8,7 @@ import pastafari.Player;
 import pastafari.Tile;
 import pastafari.TileType;
 import pastafari.structures.BuildingType;
+import pastafari.structures.City;
 
 public abstract class Unit {
 	
@@ -44,7 +45,7 @@ public abstract class Unit {
 		return Grid.getMoveCost(this.tile, to) <= this.currentAction;
 	}
 	
-	/** Retourne le chemin maximal pouvant être effectué par cette unité. */
+	/** Retourne le chemin maximal pouvant ï¿½tre effectuï¿½ par cette unitï¿½. */
 	public List<Tile> getMaxMove(List<Tile> path)
 	{
 		int cost = 0;
@@ -60,7 +61,7 @@ public abstract class Unit {
 		return maxPath;
 	}
 	
-	/** Déplace une unité vers une case adjacente, si c'est possible */
+	/** Dï¿½place une unitï¿½ vers une case adjacente, si c'est possible */
 	public void moveTo(Tile to) {
 		int cost = Grid.getMoveCost(this.tile, to);
 		if(cost <= this.currentAction) {
@@ -68,7 +69,8 @@ public abstract class Unit {
 			to.setUnit(this);
 			this.setTile(to);
 			
-			to.setOwner(this.player);
+			if(to.getBuildingType() != BuildingType.CITY)
+				to.setOwner(this.player);
 			
 			this.currentAction -= cost;
 		}
