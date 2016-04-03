@@ -12,7 +12,9 @@ import pastafari.Pathfinding;
 import pastafari.Player;
 import pastafari.Tile;
 import pastafari.TileType;
+import pastafari.structures.Building;
 import pastafari.structures.BuildingType;
+import pastafari.units.Engineer;
 import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
@@ -27,24 +29,52 @@ public class IAArmy implements IAInterface {
 		
 		for(Unit u : me.getUnits())
 		if(u.getType() == UnitType.ENGINEER) {
-			if(u.getTile().getBuilding() == me.getCity()) {
-				attackInRange(u, game.getGrid(), sortedTarget);
-			}
-			else if(u.getTile().getBuildingType() != BuildingType.BRIDGE && u.getTile().getType() == TileType.RIVER) {// If on river: make bridge
-				if(u.getTile().getBuildingType() != BuildingType.VOID)
+			Engineer eng = (Engineer) u;
+			if (!eng.isDifferent()){
+				if(u.getTile().getBuilding() == me.getCity()) {
+					attackInRange(u, game.getGrid(), sortedTarget);
+				}
+				else if(u.getTile().getBuildingType() != BuildingType.BRIDGE && u.getTile().getType() == TileType.RIVER) {// If on river: make bridge
+					if(u.getTile().getBuildingType() != BuildingType.VOID)
+						srv.sendDestroy(u.getId());
+					srv.sendBuild(u.getId(), BuildingType.BRIDGE);
+				}
+				else if(u.getTile().getBuildingType() != BuildingType.ROAD && u.getTile().getType() == TileType.MOUNTAIN) {
+					if(u.getTile().getBuildingType() != BuildingType.VOID)
+						srv.sendDestroy(u.getId());
+					srv.sendBuild(u.getId(), BuildingType.ROAD);
+				}
+				else if(u.getTile().getBuildingType() == BuildingType.CITY) {
 					srv.sendDestroy(u.getId());
-				srv.sendBuild(u.getId(), BuildingType.BRIDGE);
-			}
-			else if(u.getTile().getBuildingType() != BuildingType.ROAD && u.getTile().getType() == TileType.MOUNTAIN) {
-				if(u.getTile().getBuildingType() != BuildingType.VOID)
-					srv.sendDestroy(u.getId());
-				srv.sendBuild(u.getId(), BuildingType.ROAD);
-			}
-			else if(u.getTile().getBuildingType() == BuildingType.CITY) {
-				srv.sendDestroy(u.getId());
-			}
-			else {
-				attackInRange(u, game.getGrid(), sortedTarget);
+				}
+				else {
+					attackInRange(u, game.getGrid(), sortedTarget);
+				}
+			}else{
+				Tile myCityTile = game.getMyPlayer().getCity().getTile();
+				if (Grid.getDistance(myCityTile, eng.getTile()) == 1 && myCityTile.getBuildingType() == BuildingType.VOID && myCityTile.getType() != TileType.RIVER){
+					srv.sendBuild(eng.getId(), BuildingType.HOSPITAL);
+				}else{
+					if(u.getTile().getBuilding() == me.getCity()) {
+						attackInRange(u, game.getGrid(), sortedTarget);
+					}
+					else if(u.getTile().getBuildingType() != BuildingType.BRIDGE && u.getTile().getType() == TileType.RIVER) {// If on river: make bridge
+						if(u.getTile().getBuildingType() != BuildingType.VOID)
+							srv.sendDestroy(u.getId());
+						srv.sendBuild(u.getId(), BuildingType.BRIDGE);
+					}
+					else if(u.getTile().getBuildingType() != BuildingType.ROAD && u.getTile().getType() == TileType.MOUNTAIN) {
+						if(u.getTile().getBuildingType() != BuildingType.VOID)
+							srv.sendDestroy(u.getId());
+						srv.sendBuild(u.getId(), BuildingType.ROAD);
+					}
+					else if(u.getTile().getBuildingType() == BuildingType.CITY) {
+						srv.sendDestroy(u.getId());
+					}
+					else {
+						attackInRange(u, game.getGrid(), sortedTarget);
+					}
+				}
 			}
 		} else /* also move fucking lazy peasant  if(u.getType() != UnitType.PEASANT)*/ {
 			attackInRange(u, game.getGrid(), sortedTarget);
