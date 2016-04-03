@@ -14,24 +14,26 @@ import pastafari.units.UnitType;
 public class IAtest implements IAInterface {
 	GameState game;
 	GameServer srv;
+	IACity city = new IACity(4);
 	
 	@Override
 	public void makeTurn(GameServer srv) {
 		this.srv = srv;
 		game = srv.getGameState();
-		game.getGrid().display();
-		moveExplore(game);
+//		game.getGrid().display();
 		//srv.sendCommand(""); 
 		// move to attack
+		moveExplore(game);
+		
 		// buy&move units
-		IACity city = new IACity(4);
 		city.makeTurn(srv);
+		
 		srv.endTurn();
 	}
 	
 	public void moveExplore(GameState game) {
 		double mat[][] = game.getGrid().getMatrice(2);
-		
+
 		PriorityQueue<SortedPeasantMove> sorted = new PriorityQueue<>();
 		Player me = game.getMyPlayer();
 		for(Unit u : me.getUnits()) {
@@ -57,7 +59,6 @@ public class IAtest implements IAInterface {
 			SortedPeasantMove spm = sorted.poll();
 			if(done.add(spm.p.getId()) && Grid.canMove(false, spm.p.getCurrentAction(), game.getGrid().getTile(spm.dx, spm.dy)) && game.getGrid().getTile(spm.dx, spm.dy).getBuilding() != me.getCity()) {
 				srv.sendMove(spm.p.getId(), spm.dx, spm.dy);
-				game.getGrid().display();
 			}
 		}
 	}
