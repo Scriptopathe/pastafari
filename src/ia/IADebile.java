@@ -54,7 +54,7 @@ public class IADebile implements IAInterface {
 			srv.log("FARMING : " + srv.getGameState().getMyPlayer().countUnitByType(UnitType.PEASANT));
 			if(srv.getGameState().getMyPlayer().countUnitByType(UnitType.PEASANT) < 3)
 			{
-
+				
 			}
 			else
 			{
@@ -114,7 +114,7 @@ public class IADebile implements IAInterface {
 				if(pathDone && srv.getGameState().getMyPlayer().getUnitById(atq.getId()).getCurrentAction() >= 2)
 				{
 					srv.log("updated target = " + updatedTarget == null ? "null" : updatedTarget.isAlive() + " . " + updatedTarget.getCurrentHP());
-					// srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getX());
+					srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getY());
 				}
 			}
 		}
