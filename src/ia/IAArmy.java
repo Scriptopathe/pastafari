@@ -58,6 +58,9 @@ public class IAArmy implements IAInterface {
 			srv.sendAttack(t.hunter.getId(), t.target.getTile().getX(), t.target.getTile().getY());
 		}
 		
+		game = srv.getGameState();
+		me = game.getMyPlayer();
+		
 		PriorityQueue<MoveToCity> sortedDest = new PriorityQueue<>();
 		Pathfinding p = new Pathfinding(srv);
 		for(Unit u : me.getUnits())
