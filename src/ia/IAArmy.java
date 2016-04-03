@@ -3,8 +3,6 @@ package ia;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-import javafx.scene.shape.MoveTo;
-
 import pastafari.GameServer;
 import pastafari.GameState;
 import pastafari.Grid;

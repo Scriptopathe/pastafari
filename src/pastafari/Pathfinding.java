@@ -96,7 +96,7 @@ public class Pathfinding
 				
 				if(neigh.getType() == TileType.RIVER)
 				{
-					if(unitType == UnitType.ENGINEER)
+					if(unitType == UnitType.ENGINEER || neigh.getBuildingType() == BuildingType.BRIDGE)
 					{
 						stack.push(neigh);
 						closedSet.add(neigh);
@@ -234,7 +234,7 @@ public class Pathfinding
 				break;
 			}
 			
-			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, false)) {
 
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
@@ -281,7 +281,7 @@ public class Pathfinding
 		f.heuristicCost = getHeuristicCost(from, to);
 		openset.add(f);
 		
-		Label candidate = null;
+		Label candidate = f;
 		
 		closedSet.put(from, 0);
 		cameFrom.put(from, null);
@@ -301,7 +301,7 @@ public class Pathfinding
 				}
 			}
 			
-			for(Tile neigh : srv.getGameState().getGrid().getNeighbors(currentTile.tile, allowRiver)) {
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, false)) {
 
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
