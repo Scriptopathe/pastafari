@@ -69,12 +69,16 @@ public class Pathfinding
 		return 1000;
 	}
 	
+	public List<Tile> GetCCL(Unit from)
+	{
+		return GetCCL(from, true, true);
+	}
 	/**
 	 * Obtient la composante connexe accessible par l'unité donnée.
 	 * @param from
 	 * @return
 	 */
-	public List<Tile> GetCCL(Unit from)
+	public List<Tile> GetCCL(Unit from, boolean allowRiver, boolean ignoreEnnemy)
 	{
 		List<Tile> tiles = new ArrayList<Tile>();
 		Stack<Tile> stack = new Stack<Tile>();
@@ -114,6 +118,34 @@ public class Pathfinding
 			}
 		}
 		return tiles;
+	}
+	
+	/**
+	 * Retourne la position d'attaque optimale de ally vers ennemy.
+	 * Si aucune position d'attaque n'est trouvée, retourne null.
+	 * @param ally
+	 * @param ennemy
+	 * @return
+	 */
+	public Tile getAttackPosition(Unit ally, Unit ennemy, boolean allowRiver, boolean ignoreEnnemy)
+	{
+		List<Tile> ccl = GetCCL(ally);
+		List<Tile> path;
+		Tile tile = null;
+		int actionCost = Integer.MAX_VALUE;
+		for(Tile t : ccl)
+		{
+			List<Tile> p = FindPath(ally.getTile(), ennemy.getTile(), allowRiver, ignoreEnnemy);
+			int cost = Grid.getMoveCost(p);
+			if(cost < actionCost && Grid.getDistance(p.get(p.size() - 1), ennemy.getTile()) < ally.getRange())
+			{
+				actionCost = cost;
+				path = p;
+				tile = t;
+			}
+		}
+		
+		return tile;
 	}
 	
 	/**
