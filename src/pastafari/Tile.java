@@ -6,7 +6,6 @@ import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
 public class Tile {
-
 	private int x;
 	private int y;
 	private TileType type;
@@ -67,7 +66,7 @@ public class Tile {
 	}
 	
 	public boolean isOwned() {
-		return this.owner == null;
+		return this.owner != null;
 	}
 	
 	

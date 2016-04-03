@@ -127,7 +127,7 @@ public class Pathfinding
 	 * @param ennemy
 	 * @return
 	 */
-	public Tile getAttackPosition(Unit ally, Unit ennemy, boolean allowRiver, boolean ignoreEnnemy)
+	public Tile getAttackPosition(Unit ally, Tile ennemy, boolean allowRiver, boolean ignoreEnnemy)
 	{
 		List<Tile> ccl = GetCCL(ally);
 		List<Tile> path;
@@ -135,9 +135,9 @@ public class Pathfinding
 		int actionCost = Integer.MAX_VALUE;
 		for(Tile t : ccl)
 		{
-			List<Tile> p = FindPath(ally.getTile(), ennemy.getTile(), allowRiver, ignoreEnnemy);
+			List<Tile> p = FindPath(ally.getTile(), ennemy, allowRiver, ignoreEnnemy);
 			int cost = Grid.getMoveCost(p);
-			if(cost < actionCost && Grid.getDistance(p.get(p.size() - 1), ennemy.getTile()) < ally.getRange())
+			if(cost < actionCost && Grid.getDistance(p.get(p.size() - 1), ennemy) < ally.getRange())
 			{
 				actionCost = cost;
 				path = p;

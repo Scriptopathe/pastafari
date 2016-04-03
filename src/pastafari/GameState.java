@@ -34,6 +34,10 @@ public class GameState {
 	public Player getMyPlayer() {
 		return this.players.get(this.myId);
 	}
+
+	public Player getOtherPlayer() {
+		return this.players.get(this.myId ^ 1);
+	}
 	
 	public int getMyId() {
 		return myId;
