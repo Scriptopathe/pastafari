@@ -25,6 +25,8 @@ public class IAtest implements IAInterface {
 		//srv.sendCommand(""); 
 		// move to attack
 		moveExplore(game);
+		IAArmy army = new IAArmy();
+		army.makeTurn(srv);
 		
 		// buy&move units
 		city.makeTurn(srv);

@@ -92,17 +92,17 @@ public class GameServer extends Thread {
 		
 		return this.sendCommand("C," + Unit.getCharCode(type));
 	}
-	
+
 	public boolean sendBuild(int engineerId, BuildingType type){
 		return this.sendCommand("B," + Integer.toString(engineerId) + "," + Building.getBuildingCode(type));
+	}
+
+	public boolean sendDestroy(int engineerId){
+		return this.sendCommand("D," + Integer.toString(engineerId));
 	}
 	
 	public boolean sendMove(int id, int x, int y){
 		return this.sendCommand("M," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
-	}
-	
-	public boolean sendDestroy(int id) {
-		return this.sendCommand("D," + Integer.toString(id));
 	}
 	
 	private boolean processResponse(String srvResponse)
