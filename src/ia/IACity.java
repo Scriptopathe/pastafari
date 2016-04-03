@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import pastafari.GameServer;
 import pastafari.GameState;
 import pastafari.Grid;
+import pastafari.Pathfinding;
 import pastafari.Player;
 import pastafari.Tile;
 import pastafari.structures.City;
@@ -15,13 +16,18 @@ public class IACity implements IAInterface{
 	
 	public int MAX_PEASANT;
 	public int createdPeasant;
+	private Pathfinding path;
+	private UnitType[] units = new UnitType[]{UnitType.SCOUT, UnitType.ENGINEER, UnitType.ARCHER, UnitType.SOLDIER, UnitType.BALLISTA, UnitType.PALADIN, UnitType.DWARF};
 	
 	@Override
 	public void makeTurn(GameServer srv) {
 		GameState state = srv.getGameState();
+		path = new Pathfinding(srv);
+		this.setMAX_PEASANT((int)Math.sqrt(path.GetCCL(srv.getGameState().getMyPlayer().getCity().getTile(), UnitType.PEASANT, false, true).size())/2);
 		Player pMe = state.getMyPlayer();
 		Player pEnem;
 		boolean action;
+		boolean engCreated = false;
 		City city = pMe.getCity();
 		
 		do{
@@ -38,10 +44,10 @@ public class IACity implements IAInterface{
 			
 			boolean danger = false;
 			int minDist = Integer.MAX_VALUE;
-			Unit nearestUnit;
+			Unit nearestUnit = null;
 			
-			// si une unité ennemie n'est pas à proximité
-			for (Unit u : state.getPlayer(1 - state.getMyId()).getUnits()){
+			// on regarde si il y a une unité à proximité
+			for (Unit u : pEnem.getUnits()){
 				int dist = Grid.getDistance(u.getTile(), myCity.getTile());
 				if (dist < 2){
 					danger = true;
@@ -59,10 +65,10 @@ public class IACity implements IAInterface{
 				
 				if (myCity.getTile().getUnitType() == UnitType.VOID){
 					// on essaye de créer un MNS
-					if (gold >= 100){
+					if (gold > 100){
 						srv.sendCreate(UnitType.DWARF);
 						action = true;
-					}else if (gold >= 10){
+					}else if (gold > 10){
 						// sinon on se rabat sur le paysant
 						srv.sendCreate(UnitType.PEASANT);
 						action = true;
@@ -74,8 +80,7 @@ public class IACity implements IAInterface{
 						ArrayList<Tile> tiles = state.getGrid().getFreeNeighbors(myCity.getTile(), false, false);
 						
 						if (tiles.size() != 0){
-							Tile t = tiles.get(0);
-							//Tile t = getNearestEnemyUnit(tiles, )
+							Tile t = getNearestToTile(tiles, nearestUnit.getTile());
 							srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
 							action = true;
 						}
@@ -104,22 +109,34 @@ public class IACity implements IAInterface{
 					}
 				}else{
 					// sinon on dépense!
-					if (gold >= 50 && pMe.countEngineer() == state.getGrid().getSize() / 5 ){
+					if (gold > 50 && pMe.countEngineer() <= state.getGrid().getSize() / 5 && !engCreated){
 						srv.sendCreate(UnitType.ENGINEER);
+						engCreated = true;
 						action = true;
-					}else if (gold >= 10 && pMe.countPeasant() < MAX_PEASANT){
+					}else if (gold > 10 && pMe.countPeasant() < MAX_PEASANT){
 						srv.sendCreate(UnitType.PEASANT);
 						createdPeasant++;
 						action = true;
+					}else{
+						int r = -1;
+						if (gold > 100){
+							r = (int)(Math.random() * units.length);
+						}else if(gold > 60){
+							r = (int)(Math.random() * (units.length - 3));
+						}else if (gold > 50){
+							r = (int)(Math.random() * 2);
+						}
+						if (r != -1){
+							srv.sendCreate(units[r]);
+							action = true;
+						}
 					}
 				}
 			}
 		} while (action);
 	}
 	
-	public IACity(int maxPeasants){
-		MAX_PEASANT = maxPeasants;
-		createdPeasant = 0;
+	public IACity(){
 	}
 	
 	// on essaye de se rapprocher le plus de la cité ennemie
@@ -163,6 +180,8 @@ public class IACity implements IAInterface{
 		}
 		return result;
 	}
-	
-	
+
+	public void setMAX_PEASANT(int mAX_PEASANT) {
+		MAX_PEASANT = mAX_PEASANT;
+	}	
 }
