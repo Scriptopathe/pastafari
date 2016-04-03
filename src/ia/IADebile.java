@@ -27,6 +27,10 @@ public class IADebile implements IAInterface {
 	{
 		public Tile position;
 		public Unit target;
+		public String toString()
+		{
+			return "(pos=" + position +")";
+		}
 	}
 	
 	State state = State.Farming;
@@ -62,13 +66,13 @@ public class IADebile implements IAInterface {
 		
 		if(state == State.Attacking)
 		{
-			srv.log("ATTACK !!");
+			srv.log("MOVE ENGINEERS !!");
 			this.moveEngineers(srv);
 			this.moveArmy(srv);
 		}
 		
 		try {
-			Thread.sleep(500);
+			Thread.sleep(0*800);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,14 +85,18 @@ public class IADebile implements IAInterface {
 	{
 		List<Unit> attaquants = srv.getGameState().getMyPlayer().getUnitsByType(UnitType.BALLISTA);
 		attaquants.addAll(srv.getGameState().getMyPlayer().getUnitsByType(UnitType.PALADIN));
+		attaquants.addAll(srv.getGameState().getMyPlayer().getUnitsByType(UnitType.DWARF));
+		attaquants.addAll(srv.getGameState().getMyPlayer().getUnitsByType(UnitType.SOLDIER));
+		attaquants.addAll(srv.getGameState().getMyPlayer().getUnitsByType(UnitType.SCOUT));
 		Pathfinding p = new Pathfinding(srv);
+		srv.log("MOVE ARMY !! COUNT = " + attaquants.size());
 		for(Unit atq : attaquants)
 		{
 			AttackState s = findEnnemy(atq, srv);
 			if(s == null)
 				continue;
 			
-			List<Tile> path = p.FindRealPath(atq.getTile(), s.position, true);
+			List<Tile> path = p.FindBestPath(atq.getTile(), s.position, true);
 			boolean pathDone = true;
 			for(Tile t : path)
 			{
@@ -106,7 +114,7 @@ public class IADebile implements IAInterface {
 				if(pathDone && srv.getGameState().getMyPlayer().getUnitById(atq.getId()).getCurrentAction() >= 2)
 				{
 					srv.log("updated target = " + updatedTarget == null ? "null" : updatedTarget.isAlive() + " . " + updatedTarget.getCurrentHP());
-					srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getX());
+					// srv.sendAttack(atq.getId(), s.target.getTile().getX(), s.target.getTile().getX());
 				}
 			}
 		}
@@ -124,7 +132,7 @@ public class IADebile implements IAInterface {
 			for(Tile tile : accessible)
 			{
 				int distance = Grid.getDistance(u.getTile(), tile);
-				if(distance < u.getRange() && distance < minDistance)
+				if(distance < minDistance) // distance < u.getRange() && 
 				{
 					minDistance = distance;
 					as = new AttackState();
@@ -133,6 +141,8 @@ public class IADebile implements IAInterface {
 				}
 			}
 		}
+
+		srv.log("Accessible count = " + accessible.size() + "; Target = " + as);
 		return as;
 	}
 	

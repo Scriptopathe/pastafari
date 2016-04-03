@@ -83,6 +83,17 @@ public class GameServer extends Thread {
 	}
 	
 	public boolean sendAttack(int id, int x, int y){
+		Unit u = null;
+		for(Unit i : state.getMyPlayer().getUnits())
+			if(i.getId() == id)
+				u = i;
+		if(u == null || !u.isAlive())
+			return false;
+		Tile t = state.getGrid().getTile(x, y);
+		if(t.getUnitType() == UnitType.VOID)
+			return false;
+		if(u.getCurrentAction() < 2)
+			return false;
 		return this.sendCommand("A," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	
@@ -94,14 +105,42 @@ public class GameServer extends Thread {
 	}
 
 	public boolean sendBuild(int engineerId, BuildingType type){
+		Unit u = null;
+		for(Unit i : state.getMyPlayer().getUnits())
+			if(i.getId() == engineerId)
+				u = i;
+		if(u == null)
+			return false;
+		Tile t = state.getGrid().getTile(u.getTile().getX(), u.getTile().getY());
+		if(t.getBuildingType() != BuildingType.VOID)
+			return false;
+		if(u.getCurrentAction() < 2)
+			return false;
+		
 		return this.sendCommand("B," + Integer.toString(engineerId) + "," + Building.getBuildingCode(type));
 	}
 
 	public boolean sendDestroy(int engineerId){
+		Unit u = null;
+		for(Unit i : state.getMyPlayer().getUnits())
+			if(i.getId() == engineerId)
+				u = i;
+		if(u == null)
+			return false;
+		Tile t = state.getGrid().getTile(u.getTile().getX(), u.getTile().getY());
+		if(t.getBuildingType() == BuildingType.VOID)
+			return false;
 		return this.sendCommand("D," + Integer.toString(engineerId));
 	}
 	
 	public boolean sendMove(int id, int x, int y){
+		Unit u = null;
+		for(Unit i : state.getMyPlayer().getUnits())
+			if(i.getId() == id)
+				u = i;
+		if(u == null || !u.isAlive()) return false;
+		Tile t = state.getGrid().getTile(x, y);
+		if(t.getUnitType() != UnitType.VOID) return false;
 		return this.sendCommand("M," + Integer.toString(id) + "," + Integer.toString(x) + "," + Integer.toString(y));
 	}
 	

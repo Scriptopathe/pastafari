@@ -3,8 +3,6 @@ package ia;
 import java.util.ArrayList;
 import java.util.PriorityQueue;
 
-import javafx.scene.shape.MoveTo;
-
 import pastafari.GameServer;
 import pastafari.GameState;
 import pastafari.Grid;
@@ -86,6 +84,7 @@ public class IAArmy implements IAInterface {
 			if(!t.hunter.isAlive()) continue;
 			if(t.hunter.getCurrentAction() < 2) continue;
 			if(!t.target.isAlive()) continue;
+			
 			srv.sendAttack(t.hunter.getId(), t.target.getTile().getX(), t.target.getTile().getY());
 		}
 		
