@@ -62,7 +62,7 @@ public class Grid {
 			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
 				if(i == tile.getX() && j == tile.getY()) continue;
 				Tile t = this.tiles[i][j];
-				if((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER) {
+				if((t.getType() == TileType.RIVER && (allowRiver || t.getBuildingType() == BuildingType.BRIDGE)) || t.getType() != TileType.RIVER) {
 					neighs.add(t);
 				}
 			}
@@ -83,7 +83,7 @@ public class Grid {
 			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
 				if(i == tile.getX() && j == tile.getY()) continue;
 				Tile t = this.tiles[i][j];
-				if((t.getUnitType() == UnitType.VOID || (ignoreEnnemy && !t.getUnit().getPlayer().isMe())) && ((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER)) {
+				if((t.getUnitType() == UnitType.VOID || (ignoreEnnemy && !t.getUnit().getPlayer().isMe())) && ((t.getType() == TileType.RIVER && (allowRiver || t.getBuildingType() == BuildingType.BRIDGE)) || t.getType() != TileType.RIVER)) {
 					neighs.add(t);
 				}
 			}
@@ -168,7 +168,11 @@ public class Grid {
 		int cost = 0;
 		for(Tile t : path)
 		{
-			cost += getMoveCost(t, t);
+			int c = getMoveCost(t, t);
+			if(c == Integer.MAX_VALUE)
+				return c;
+			
+			cost += c;
 		}
 		return cost;
 	}
