@@ -95,13 +95,12 @@ public class Grid {
 		return Math.max(Math.abs(from.getX()-to.getX()), Math.abs(from.getY()-to.getY()));
 	}
 	
-	public double[][] getPeasantMatrice(){
-		int actionPeasant = 2;
+	public double[][] getMatrice(int action_max){
 		double peak[][] = new double [this.size][this.size];
 		
 		for (int i = 0; i < this.size; i++){
 			for (int j = 0; j < this.size; j++){
-				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, actionPeasant, tiles[i][j]))
+				if (!this.tiles[i][j].getOwner().isMe() && canMove(false, action_max, tiles[i][j]))
 					peak[i][j] = 1;
 				else
 					peak[i][j] = 0;
@@ -125,12 +124,13 @@ public class Grid {
 				// Neighbor
 				for (int k = Math.max(p[0]-1, 0); k <= Math.min(p[0]+1, size-1); k++)
 				for (int l = Math.max(p[1]-1, 0); l <= Math.min(p[1]+1, size-1); l++)
-				if(tmp[k][l] == 0 && canMove(false, actionPeasant, this.tiles[k][l])) {
-					tmp[k][l] = tmp[p[0]][p[1]] * 0.7;
+				if(tmp[k][l] == 0 && canMove(false, action_max, this.tiles[k][l])) {
+					tmp[k][l] = tmp[p[0]][p[1]] * 0.4;
 					q.add(new int[]{k, l});
 				}
 			}
 			
+
 			for(int k = 0; k < this.size; k++)
 			for(int l = 0; l < this.size; l++)
 				result[k][l] += tmp[k][l];
