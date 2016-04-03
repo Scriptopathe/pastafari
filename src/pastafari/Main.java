@@ -32,7 +32,7 @@ public class Main {
 					srv.log("END TURN");
 				}
 			}*/).start();
-			new GameServer("127.0.0.1", 8080, new IARenaud()).start();
+			new GameServer("127.0.0.1", 8080, new IAtest()).start();
 		}
 		
 
