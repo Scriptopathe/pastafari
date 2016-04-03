@@ -207,6 +207,11 @@ public class GameServer extends Thread {
 			log("IA already running...");
 			return;
 		}
+		if(this.getGameState().getMyPlayer().getCity() == null)
+		{
+			log("IA mourrue...");
+			return;
+		}
 		this.iaRunning = true;
 		
 		try {

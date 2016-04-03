@@ -220,7 +220,7 @@ public class Pathfinding
 		int a = t1.getY() - t2.getY();
 		int b = t2.getX() - t1.getX();
 		int c = t1.getX()*t2.getY() - t2.getX()*t2.getY();
-		double dist = (Math.abs(a*src.getX() + b*src.getY() + c) / Math.sqrt(a*a + b*b));
+		double dist = (Math.abs(a*src.getX() + b*src.getY() + c) / Math.sqrt(1+ a*a + b*b));
 		double percent = getEuclidianDst(src, t2) / getEuclidianDst(t1, t2);
 		dist = 5*Math.max(0, percent*(7 - dist));
 		return (int)dist + Grid.getDistance(src, t2) * 1;

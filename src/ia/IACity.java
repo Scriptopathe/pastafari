@@ -17,6 +17,8 @@ public class IACity implements IAInterface{
 	private boolean limitEngineer;
 	private int leftUnits;
 	public int MAX_PEASANT;
+	public int MAX_ENGINEER_FACTOR = 3; // ingés = mapSize / FACTOR
+	public int MAX_ENGINEER = 5;
 	public int createdPeasant;
 	private Pathfinding path;
 	private UnitType[] units = new UnitType[]{UnitType.SCOUT, UnitType.ENGINEER, UnitType.ARCHER, UnitType.SOLDIER, UnitType.BALLISTA, UnitType.PALADIN, UnitType.DWARF};
@@ -115,8 +117,8 @@ public class IACity implements IAInterface{
 				}else{
 					// sinon on dépense!
 					if (gold > 50 && 
-							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5)
-									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < 3))
+							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / MAX_ENGINEER_FACTOR)
+									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < MAX_ENGINEER))
 										&& !engCreated){
 						returnVal |= srvMsg = srv.sendCreate(UnitType.ENGINEER);
 						engCreated = true;
