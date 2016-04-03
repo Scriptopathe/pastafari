@@ -51,7 +51,7 @@ public class Grid {
 
 	/**
 	 * Obtient la liste des voisins du tile potentiellement accessibles pouvant contenir
-	 * une unité.
+	 * une unitï¿½.
 	 * @param tile
 	 * @param allowRiver
 	 * @return
@@ -71,8 +71,8 @@ public class Grid {
 	}
 	
 	/** 
-	 * Obtient les voisins qui sont réellement accessibles.
-	 * N'autorise pas les voisins avec unité.
+	 * Obtient les voisins qui sont rï¿½ellement accessibles.
+	 * N'autorise pas les voisins avec unitï¿½.
 	 * @param tile
 	 * @param allowRiver
 	 * @return
