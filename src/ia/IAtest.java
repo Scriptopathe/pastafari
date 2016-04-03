@@ -18,7 +18,7 @@ public class IAtest implements IAInterface {
 	IACity city = new IACity(false);
 	
 	@Override
-	public void makeTurn(GameServer srv) {
+	public boolean makeTurn(GameServer srv) {
 		this.srv = srv;
 		game = srv.getGameState();
 //		game.getGrid().display();
@@ -35,6 +35,7 @@ public class IAtest implements IAInterface {
 		city.makeTurn(srv);
 		
 		srv.endTurn();
+		return false;
 	}
 	
 	public void moveExplore(GameState game) {

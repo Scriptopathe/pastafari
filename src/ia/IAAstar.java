@@ -18,19 +18,21 @@ public class IAAstar implements IAInterface {
 	}
 	
 	@Override
-	public void makeTurn(GameServer srv) {
+	public boolean makeTurn(GameServer srv) {
+		boolean returnVal = false;
+		
 		srv.log("MAKE TURN : Type command");
 		Pathfinding f = new Pathfinding(srv);
 		GameState state = srv.getGameState();
 		while(true)
 		{
 			Tile tile = srv.getGameState().getPlayer(0).getCity().getTile();
-			srv.sendCreate(UnitType.PEASANT);
+			returnVal |= srv.sendCreate(UnitType.PEASANT);
 			List<Tile> b = f.GetCCL(srv.getGameState().getPlayer(0).getCity().getTile().getUnit());
 			srv.log("path: (" + b.size() + "): " + b);
-			srv.sendMove(0, tile.getX()+1, tile.getY());
+			returnVal |= srv.sendMove(0, tile.getX()+1, tile.getY());
 			
-			srv.sendCreate(UnitType.SOLDIER);
+			returnVal |= srv.sendCreate(UnitType.SOLDIER);
 			b = f.GetCCL(srv.getGameState().getPlayer(0).getCity().getTile().getUnit());
 			srv.log("path: (" + b.size() + "): " + b);
 			/*String str = srv.scanIn.nextLine();
@@ -42,5 +44,6 @@ public class IAAstar implements IAInterface {
 
 			srv.scanIn.nextLine();
 		}
+		//return returnVal;
 	}
 }

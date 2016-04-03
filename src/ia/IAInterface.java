@@ -4,5 +4,5 @@ import pastafari.GameServer;
 
 public interface IAInterface {
 	
-	public void makeTurn(GameServer srv);
+	public boolean makeTurn(GameServer srv);
 }

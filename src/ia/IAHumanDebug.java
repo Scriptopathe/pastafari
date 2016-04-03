@@ -9,7 +9,7 @@ import pastafari.units.Unit;
 
 public class IAHumanDebug implements IAInterface {
 	@Override
-	public void makeTurn(GameServer srv) {
+	public boolean makeTurn(GameServer srv) {
 		srv.log("MAKE TURN : Type command");
 		String bl = srv.scanIn.nextLine();
 		while(!bl.equals("E"))
@@ -21,5 +21,6 @@ public class IAHumanDebug implements IAInterface {
 		}
 		srv.endTurn();
 		srv.log("END TURN");
+		return false;
 	}
 }

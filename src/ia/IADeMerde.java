@@ -25,7 +25,7 @@ public class IADeMerde implements IAInterface {
 	}
 	
 	@Override
-	public void makeTurn(GameServer srv) {
+	public boolean makeTurn(GameServer srv) {
 		if(init) {
 			ennemyCity = srv.getGameState().getGrid().getCity(srv.getGameState().getEnnemyId());
 			init = false;
@@ -53,5 +53,6 @@ public class IADeMerde implements IAInterface {
 		}
 		winner.newTurn();
 		srv.endTurn();
+		return false;
 	}
 }

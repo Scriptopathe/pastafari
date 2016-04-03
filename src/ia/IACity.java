@@ -22,7 +22,7 @@ public class IACity implements IAInterface{
 	private UnitType[] units = new UnitType[]{UnitType.SCOUT, UnitType.ENGINEER, UnitType.ARCHER, UnitType.SOLDIER, UnitType.BALLISTA, UnitType.PALADIN, UnitType.DWARF};
 	
 	@Override
-	public void makeTurn(GameServer srv) {
+	public boolean makeTurn(GameServer srv) {
 		GameState state = srv.getGameState();
 		path = new Pathfinding(srv);
 		this.setMAX_PEASANT((int)Math.sqrt(path.GetCCL(srv.getGameState().getMyPlayer().getCity().getTile(), UnitType.PEASANT, false, true).size())/2);
@@ -31,6 +31,7 @@ public class IACity implements IAInterface{
 		boolean action;
 		boolean engCreated = false;
 		boolean srvMsg;
+		boolean returnVal = false;
 		City city = pMe.getCity();
 		
 		do{
@@ -70,11 +71,11 @@ public class IACity implements IAInterface{
 				if (myCity.getTile().getUnitType() == UnitType.VOID){
 					// on essaye de créer un MNS
 					if (gold > 100){
-						srvMsg = srv.sendCreate(UnitType.DWARF);
+						returnVal |= srvMsg = srv.sendCreate(UnitType.DWARF);
 						action = true;
 					}else if (gold > 10){
 						// sinon on se rabat sur le paysant
-						srvMsg = srv.sendCreate(UnitType.PEASANT);
+						returnVal |= srvMsg = srv.sendCreate(UnitType.PEASANT);
 						action = true;
 					}
 				}else{
@@ -85,7 +86,7 @@ public class IACity implements IAInterface{
 						
 						if (tiles.size() != 0){
 							Tile t = getNearestToTile(tiles, nearestUnit.getTile());
-							srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
+							returnVal |= srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
 							action = true;
 						}
 					}
@@ -108,7 +109,7 @@ public class IACity implements IAInterface{
 							goal = getNearestToTile(tiles, enemyCity.getTile());
 						}
 						
-						srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), goal.getX(), goal.getY());
+						returnVal |= srvMsg = srv.sendMove(myCity.getTile().getUnit().getId(), goal.getX(), goal.getY());
 						action = true;
 					}
 				}else{
@@ -117,11 +118,11 @@ public class IACity implements IAInterface{
 							((!this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) <= state.getGrid().getSize() / 5 - 1)
 									|| (this.limitEngineer && pMe.countUnitByType(UnitType.ENGINEER) < 3))
 										&& !engCreated){
-						srvMsg = srv.sendCreate(UnitType.ENGINEER);
+						returnVal |= srvMsg = srv.sendCreate(UnitType.ENGINEER);
 						engCreated = true;
 						action = true;
 					}else if (gold > 10 && pMe.countUnitByType(UnitType.PEASANT) < MAX_PEASANT){
-						srvMsg = srv.sendCreate(UnitType.PEASANT);
+						returnVal |= srvMsg = srv.sendCreate(UnitType.PEASANT);
 						createdPeasant++;
 						action = true;
 					}else{
@@ -134,7 +135,7 @@ public class IACity implements IAInterface{
 							r = (int)(Math.random() * leftUnits);
 						}
 						if (r != -1){
-							srvMsg = srv.sendCreate(units[r]);
+							returnVal |= srvMsg = srv.sendCreate(units[r]);
 							action = true;
 						}
 					}
@@ -143,6 +144,7 @@ public class IACity implements IAInterface{
 			if (!srvMsg)
 				break;
 		} while (action);
+		return returnVal;
 	}
 	
 	public IACity(boolean limitEngineer){

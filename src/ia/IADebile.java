@@ -37,8 +37,10 @@ public class IADebile implements IAInterface {
 	IACity city = new IACity(true);
 	IAtest test = new IAtest();
 	@Override
-	public void makeTurn(GameServer srv) 
+	public boolean makeTurn(GameServer srv) 
 	{
+		boolean returnVal = false;
+		
 		city.setMAX_PEASANT(8);
 		GameState gs = srv.getGameState();
 
@@ -79,6 +81,8 @@ public class IADebile implements IAInterface {
 		}
 		
 		srv.endTurn();
+		
+		return false;
 	}
 	
 	void moveArmy(GameServer srv)
@@ -107,7 +111,7 @@ public class IADebile implements IAInterface {
 				}
 			}
 			
-			// Si on est arrivé
+			// Si on est arrivï¿½
 			Unit updatedTarget = srv.getGameState().getOtherPlayer().getUnitById(s.target.getId());
 			if(updatedTarget != null && updatedTarget.isAlive())
 			{
@@ -170,7 +174,7 @@ public class IADebile implements IAInterface {
 			}
 		}
 		
-		// on regarde l'état updaté des ingés
+		// on regarde l'ï¿½tat updatï¿½ des ingï¿½s
 		engineers = srv.getGameState().getMyPlayer().getUnitsByType(UnitType.ENGINEER);
 		for(Unit eng : engineers)
 		{
