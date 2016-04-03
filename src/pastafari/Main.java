@@ -1,6 +1,7 @@
 package pastafari;
 
 import ia.IAAstar;
+import ia.IADebile;
 import ia.IADeMerde;
 import ia.IAHumanDebug;
 import ia.IAtest;
