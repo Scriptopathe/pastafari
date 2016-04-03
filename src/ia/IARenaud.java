@@ -24,14 +24,14 @@ public class IARenaud implements IAInterface {
 			returnVal = false;
 			this.srv = srv;
 			game = srv.getGameState();
-			System.out.println("-- Explore ----------------");
+			srv.log("-- Explore ----------------");
 			returnVal |= moveExplore(game);
-			System.out.println("-- Army -------------------");
+			srv.log("-- Army -------------------");
 			IAArmy army = new IAArmy();
 			returnVal |= army.makeTurn(srv);
 			
 			// buy&move units
-			System.out.println("-- City -------------------");
+			srv.log("-- City -------------------");
 			
 			returnVal |= city.makeTurn(srv);
 		}while(returnVal);
@@ -47,7 +47,7 @@ public class IARenaud implements IAInterface {
 		Player me = game.getMyPlayer();
 		for(Unit u : me.getUnits()) {
 			if (me.getId() == 1){
-				System.err.println(me.getUnits());
+				// System.err.println(me.getUnits());
 			}
 			if(u.getType() == UnitType.PEASANT) {
 				int x = u.getTile().getX();

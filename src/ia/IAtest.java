@@ -24,14 +24,14 @@ public class IAtest implements IAInterface {
 //		game.getGrid().display();
 		//srv.sendCommand(""); 
 		// move to attack
-		System.out.println("-- Explore ----------------");
+		srv.log("-- Explore ----------------");
 		moveExplore(game);
-		System.out.println("-- Army -------------------");
+		srv.log("-- Army -------------------");
 		IAArmy army = new IAArmy();
 		army.makeTurn(srv);
 		
 		// buy&move units
-		System.out.println("-- City -------------------");
+		srv.log("-- City -------------------");
 		city.makeTurn(srv);
 		
 		srv.endTurn();
@@ -44,9 +44,9 @@ public class IAtest implements IAInterface {
 		PriorityQueue<SortedPeasantMove> sorted = new PriorityQueue<>();
 		Player me = game.getMyPlayer();
 		for(Unit u : me.getUnits()) {
-			System.err.println("id is " + me.getId());
+			// System.err.println("id is " + me.getId());
 			if (me.getId() == 1){
-				System.err.println(me.getUnits());
+				// System.err.println(me.getUnits());
 			}
 			if(u.getType() == UnitType.PEASANT) {
 				int x = u.getTile().getX();

@@ -13,7 +13,7 @@ import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
 public class GameServer extends Thread {
-	boolean verbose = true;
+	boolean verbose = false;
 	public Scanner scanIn;
 	Socket clientSocket;
 	PrintWriter outClient;
@@ -174,7 +174,8 @@ public class GameServer extends Thread {
 	 */
 	public void log(String str)
 	{
-		System.out.println("[Client " + myId + "] " + str);
+		if(this.verbose)
+			System.out.println("[Client " + myId + "] " + str);
 	}
 	
 	public void run()
@@ -215,7 +216,7 @@ public class GameServer extends Thread {
 		this.iaRunning = true;
 		
 		try {
-			System.out.println("MAKE TURN " + this.myId);
+			log("MAKE TURN " + this.myId);
 			this.ia.makeTurn(this);
 		}
 		catch(RuntimeException e)
@@ -242,7 +243,6 @@ public class GameServer extends Thread {
 		// Preprocess
 		gridStr = gridStr.replace("];];]:u", "];];]@u");
 		gridStr = gridStr.replace("];];", "];]$");
-		// System.out.println(gridStr);
 		String map = gridStr.split("@")[0].split("m:\\[")[1];
 		
 		// Cr�ation du nouveau state
@@ -262,7 +262,6 @@ public class GameServer extends Thread {
 		{
 			String line = lines[i];
 			String[] cases = line.split(";");
-			// System.out.println("line: " + line);
 			for(int j = 0; j < cases.length - 1; j++)
 			{
 				String tile = cases[j];
