@@ -6,6 +6,7 @@ import java.util.PriorityQueue;
 import pastafari.GameServer;
 import pastafari.GameState;
 import pastafari.Grid;
+import pastafari.Pathfinding;
 import pastafari.Player;
 import pastafari.units.Peasant;
 import pastafari.units.Unit;
@@ -14,7 +15,7 @@ import pastafari.units.UnitType;
 public class IAtest implements IAInterface {
 	GameState game;
 	GameServer srv;
-	IACity city = new IACity(4);
+	IACity city = new IACity();
 	
 	@Override
 	public void makeTurn(GameServer srv) {
