@@ -64,13 +64,13 @@ public class Grid {
 		return neighs;
 	}
 	
-	public ArrayList<Tile> getFreeNeighbors(Tile tile, boolean allowRiver) {
+	public ArrayList<Tile> getFreeNeighbors(Tile tile, boolean allowRiver, boolean ignoreEnnemy) {
 		ArrayList<Tile> neighs = new ArrayList<>();
 		for(int i = Math.max(tile.getX() - 1, 0); i <= Math.min(tile.getX()+1, this.size - 1); i++) {
 			for(int j = Math.max(tile.getY() - 1, 0); j <= Math.min(tile.getY()+1, this.size - 1); j++) {
 				if(i == tile.getX() && j == tile.getY()) continue;
 				Tile t = this.tiles[i][j];
-				if(t.getUnitType() == UnitType.VOID && ((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER)) {
+				if((t.getUnitType() == UnitType.VOID || (ignoreEnnemy && !t.getUnit().getPlayer().isMe())) && ((t.getType() == TileType.RIVER && allowRiver) || t.getType() != TileType.RIVER)) {
 					neighs.add(t);
 				}
 			}
@@ -149,7 +149,7 @@ public class Grid {
 	}
 
 	
-	/** Retourne le cout requis pour parcourir le chemin donné */
+	/** Retourne le cout requis pour parcourir le chemin donnï¿½ */
 	public static int getMoveCost(List<Tile> path)
 	{
 		int cost = 0;
