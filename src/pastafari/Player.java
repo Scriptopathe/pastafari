@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import pastafari.structures.City;
+import pastafari.units.Engineer;
 import pastafari.units.Unit;
 import pastafari.units.UnitType;
 
@@ -80,5 +81,19 @@ public class Player {
 	
 	public City getCity() {
 		return city;
+	}
+	
+	public void setDifferentEngineer(){
+		List<Unit> engineers = this.getUnitsByType(UnitType.ENGINEER);
+		if (engineers.size() > 1){
+			Unit minInge = engineers.get(0);
+			for (Unit eng : engineers){
+				if (Grid.getDistance(this.getCity().getTile(), eng.getTile()) < Grid.getDistance(this.getCity().getTile(), minInge.getTile())){
+					minInge = eng;
+				}
+			}
+			Engineer e = (Engineer) minInge;
+			e.setDifferent();
+		}
 	}
 }
