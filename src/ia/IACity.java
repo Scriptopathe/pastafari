@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import pastafari.GameServer;
 import pastafari.GameState;
+import pastafari.Grid;
+import pastafari.Pathfinding;
 import pastafari.Player;
 import pastafari.Tile;
 import pastafari.structures.City;
@@ -14,12 +16,18 @@ public class IACity implements IAInterface{
 	
 	public int MAX_PEASANT;
 	public int createdPeasant;
+	private Pathfinding path;
+	private UnitType[] units = new UnitType[]{UnitType.SCOUT, UnitType.ENGINEER, UnitType.ARCHER, UnitType.SOLDIER, UnitType.BALLISTA, UnitType.PALADIN, UnitType.DWARF};
 	
 	@Override
 	public void makeTurn(GameServer srv) {
 		GameState state = srv.getGameState();
+		path = new Pathfinding(srv);
+		this.setMAX_PEASANT((int)Math.sqrt(path.GetCCL(srv.getGameState().getMyPlayer().getCity().getTile(), UnitType.PEASANT, false, true).size())/2);
 		Player pMe = state.getMyPlayer();
+		Player pEnem;
 		boolean action;
+		boolean engCreated = false;
 		City city = pMe.getCity();
 		
 		do{
@@ -29,37 +37,151 @@ public class IACity implements IAInterface{
 			// on récupère le dernier state à jour
 			state = srv.getGameState();
 			pMe = state.getMyPlayer();
+			pEnem = state.getPlayer(1 - pMe.getId());
 			City myCity = pMe.getCity();
+			City enemyCity = state.getGrid().getCity(1 - pMe.getId());
+			int gold = pMe.getGold();
 			
-			// si une unité occupe la cité
-			if (myCity.getTile().getUnitType() != UnitType.VOID && myCity.getTile().getUnit().getCurrentAction() != 0){
-				// si on peut bouger l'unité
-				ArrayList<Tile> tiles = state.getGrid().getFreeNeighbors(myCity.getTile(), false, false);
-				
-				if (tiles.size() != 0){
-					Tile t = tiles.get(0);
-					srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
-					action = true;
+			boolean danger = false;
+			int minDist = Integer.MAX_VALUE;
+			Unit nearestUnit = null;
+			
+			// on regarde si il y a une unité à proximité
+			for (Unit u : pEnem.getUnits()){
+				int dist = Grid.getDistance(u.getTile(), myCity.getTile());
+				if (dist < 2){
+					danger = true;
+					if (dist < minDist){
+						minDist = dist;
+						nearestUnit = u;
+					}else if (dist == minDist && u.getTile().getUnitType() == UnitType.ENGINEER){
+						nearestUnit = u;
+					}
 				}
-			}else{
-				// sinon on dépense!
-				int gold = pMe.getGold();
-				if (gold > 50 && pMe.countEngineer() == 0 ){
-					srv.sendCreate(UnitType.ENGINEER);
-					action = true;
-				}else if (gold > 10 && createdPeasant < MAX_PEASANT){
-					srv.sendCreate(UnitType.PEASANT);
-					createdPeasant++;
-					action = true;
+			}
+			
+			if (danger){
+				// on est dans la merde!!
+				
+				if (myCity.getTile().getUnitType() == UnitType.VOID){
+					// on essaye de créer un MNS
+					if (gold > 100){
+						srv.sendCreate(UnitType.DWARF);
+						action = true;
+					}else if (gold > 10){
+						// sinon on se rabat sur le paysant
+						srv.sendCreate(UnitType.PEASANT);
+						action = true;
+					}
+				}else{
+					// si on a assez d'argent pour créer d'autres murs
+					// TODO: vérifier si c'est pas mieux de garder l'unité actuelle au lieu de la faire bouger
+					if (gold >= 10){
+						ArrayList<Tile> tiles = state.getGrid().getFreeNeighbors(myCity.getTile(), false, false);
+						
+						if (tiles.size() != 0){
+							Tile t = getNearestToTile(tiles, nearestUnit.getTile());
+							srv.sendMove(myCity.getTile().getUnit().getId(), t.getX(), t.getY());
+							action = true;
+						}
+					}
+				}
+			}else{ // on est pas en danger
+				
+				UnitType uType = myCity.getTile().getUnitType();
+				// si une unité occupe la cité
+				if (uType != UnitType.VOID && myCity.getTile().getUnit().getCurrentAction() != 0){
+					// si on peut bouger l'unité
+					ArrayList<Tile> tiles = state.getGrid().getFreeNeighbors(myCity.getTile(), false, false);
+					
+					if (tiles.size() != 0){
+						Tile goal;
+						if (uType == UnitType.BALLISTA){
+							// unités en retrait
+							goal = getFarsestFromEnemy(tiles, enemyCity.getTile());
+						}else{
+							// unités en attaque
+							goal = getNearestToTile(tiles, enemyCity.getTile());
+						}
+						
+						srv.sendMove(myCity.getTile().getUnit().getId(), goal.getX(), goal.getY());
+						action = true;
+					}
+				}else{
+					// sinon on dépense!
+					if (gold > 50 && pMe.countEngineer() <= state.getGrid().getSize() / 5 && !engCreated){
+						srv.sendCreate(UnitType.ENGINEER);
+						engCreated = true;
+						action = true;
+					}else if (gold > 10 && pMe.countPeasant() < MAX_PEASANT){
+						srv.sendCreate(UnitType.PEASANT);
+						createdPeasant++;
+						action = true;
+					}else{
+						int r = -1;
+						if (gold > 100){
+							r = (int)(Math.random() * units.length);
+						}else if(gold > 60){
+							r = (int)(Math.random() * (units.length - 3));
+						}else if (gold > 50){
+							r = (int)(Math.random() * 2);
+						}
+						if (r != -1){
+							srv.sendCreate(units[r]);
+							action = true;
+						}
+					}
 				}
 			}
 		} while (action);
 	}
 	
-	public IACity(int maxPeasants){
-		MAX_PEASANT = maxPeasants;
-		createdPeasant = 0;
+	public IACity(){
+	}
+	
+	// on essaye de se rapprocher le plus de la cité ennemie
+	public Tile getNearestToTile(ArrayList<Tile> tiles, Tile goalTile){
+		int minDist = Integer.MAX_VALUE;
+		Tile result = tiles.get(0);
+		for (Tile t : tiles){
+			if (Grid.getDistance(t, goalTile) < minDist){
+				minDist = Grid.getDistance(t, goalTile);
+				result = t;
+			}
+		}
+		return result;
+	}
+	
+	// on essaye de se rapprocher le plus de l'ennemis le plus proche
+	public Tile getNearestEnemyUnit(ArrayList<Tile> tiles, ArrayList<Unit> units){
+		int minDist = Integer.MAX_VALUE;
+		Tile result = tiles.get(0);
+		for (Tile t : tiles){
+			for (Unit u: units){
+				if (Grid.getDistance(t, u.getTile()) < minDist){
+					minDist = Grid.getDistance(t, u.getTile());
+					result = t;
+				}
+			}
+		}
+		return result;
 	}
 	
 	
+	// get the farsest tile from the enemy city
+	public Tile getFarsestFromEnemy(ArrayList<Tile> tiles, Tile enemyCity){
+		int maxDist = Integer.MIN_VALUE;
+		Tile result = tiles.get(0);
+		for (Tile t : tiles){
+			if (Grid.getDistance(t, enemyCity) > maxDist){
+				maxDist = Grid.getDistance(t, enemyCity);
+				result = t;
+			}
+		}
+		return result;
+	}
+
+	public void setMAX_PEASANT(int mAX_PEASANT) {
+		MAX_PEASANT = mAX_PEASANT;
+	}	
 }
