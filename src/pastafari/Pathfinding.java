@@ -85,7 +85,7 @@ public class Pathfinding
 			Tile t = stack.pop();
 			tiles.add(t);
 			
-			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(t, true))
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(t, true, true))
 			{
 				if(closedSet.contains(neigh))
 					continue;
@@ -140,7 +140,7 @@ public class Pathfinding
 			
 			if(currentTile.equals(to)) break;
 			
-			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver)) {
+			for(Tile neigh : srv.getGameState().getGrid().getFreeNeighbors(currentTile.tile, allowRiver, false)) {
 				int newCost = closedSet.get(currentTile.tile) + getCost(neigh);
 				if(!closedSet.containsKey(neigh) || newCost < closedSet.get(neigh)) {
 					closedSet.put(neigh, newCost);
