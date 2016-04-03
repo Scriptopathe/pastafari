@@ -37,7 +37,7 @@ public class IAPeteLesInges implements IAInterface {
 	IACity city = new IACity(true);
 	IAtest test = new IAtest();
 	@Override
-	public void makeTurn(GameServer srv) 
+	public boolean makeTurn(GameServer srv) 
 	{
 		city.setMAX_PEASANT(8);
 		GameState gs = srv.getGameState();
@@ -79,6 +79,8 @@ public class IAPeteLesInges implements IAInterface {
 		}
 		
 		srv.endTurn();
+		
+		return false;
 	}
 	
 	void moveArmy(GameServer srv)

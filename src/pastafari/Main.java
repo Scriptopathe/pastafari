@@ -1,5 +1,6 @@
 package pastafari;
 
+import ia.IAArmy;
 import ia.IAAstar;
 import ia.IADebile;
 import ia.IADeMerde;
